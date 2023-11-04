@@ -1,9 +1,10 @@
-#include<iostream.h>
+#include<iostream>
 using namespace std;
 
 void main()
 {
-    cin>>n1>>n2>>n3>>nt;
+    int n1, n2, n3, nt, ct;
+    cin>>n1>>n2>>n3;
     //sort numbers
     if (n3<n1)
         {
@@ -15,7 +16,7 @@ void main()
     {
         nt = n2;
         n2 = n3;
-        n2 = nt;
+        n3 = nt;
     }
     if(n2<n1)
     {
@@ -25,15 +26,15 @@ void main()
     }
     //count divisablity
     ct = 0;
-    if ( n1%n2 ==0)
+    if ( n2%n1 == 0)
     {
         ct++;
     }
-    if ( n1%n3 ==0)
+    if ( n3%n1 ==0)
     {
         ct++;
     }
-    if ( n2%n3 ==0)
+    if ( n3%n2 ==0)
     {
         ct++;
     }
