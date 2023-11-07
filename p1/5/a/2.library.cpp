@@ -15,7 +15,7 @@ void main()
             //what if the user inputed 10 math books while there is less than 10 left
             neb = neb - teb;
             nmb = nmb - tmb;
-            if(tmb >= 10)
+            if(tmb >= 10 && nmb >= 0)
             {
                 ctm++;
             }
