@@ -12,7 +12,7 @@ void main()
             ct = 0;
             for(j=2;j<=(n2/2);j++)
             {
-                if(n2%j)
+                if(n2%j==0)
                 {
                     if((n1+n2)%2 == 0)
                     {
