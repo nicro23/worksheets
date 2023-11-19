@@ -12,23 +12,23 @@ void main()
         if(v%i ==0 && i%2 == 0)
         {
             cout<<i<<" ";
-            cto++;
+            cte++;
         }
         if(v%i ==0 && i%2 != 0)
         {
             cout<<i<<" ";
-            cte++;
+            cto++;
         }    
     }
     if(cto == 0 && cte >0)
     {
-        cout<<"odds";
+        cout<<"evens";
     }
     else
     {
         if(cte == 0 && cto>0)
         {
-            cout<<"evens";
+            cout<<"odds";
         }
         else
         {
