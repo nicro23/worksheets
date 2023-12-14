@@ -3,19 +3,16 @@ using namespace std;
 
 void main()
 {
-    int x[5];
-    for(int i=0;i<5;i++)
+    int x[50];
+    for(int i=0;i<50;i++)
 	{
 		cin>>x[i];
 	}
-    for(int j = 0;j<5;j++)
+    for(int j = 0;j<50;j++)
     {
-        for(int i = 0;i<5;i++)
+        for(int i = j;i<50;i++)
         {
-            if(x[j]<=x[i])
-            {
-                cout<<x[j]<<" , "<<x[i]<<endl;
-            }
+                cout<<x[j]<<","<<x[i];
         }
     }
     

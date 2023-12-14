@@ -3,7 +3,8 @@ using namespace std;
 
 void main()
 {
-    int i,x[40],wid, tot =0,rem;
+    int i,x[40],wid, tot =0,rem,a;
+    cin>>a;
     for(i =0;i<40;i++)
     {
         if(i%2==0)
@@ -16,7 +17,7 @@ void main()
             x[i] = 1;
         }
     }
-    tot = (90 - tot);
+    tot = (a - tot);
     rem = tot%20;
     wid = (tot/20);
     if( rem == 0)

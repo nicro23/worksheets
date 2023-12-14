@@ -17,7 +17,7 @@ void main()
         ct2++;
         for(int i =0;i<30;i++)
         {
-            if(x[i]<x[i+1])
+            if(x[i]+1==x[i+1])
             {
                 ct++;
             }
