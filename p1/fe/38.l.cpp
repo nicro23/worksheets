@@ -61,8 +61,8 @@ void swphlf(int x[], int n)
     for(k=n/2;k<n;k++)
     {
         z = x[i];
-        x[i] = x[n];
-        x[n] = z;
+        x[i] = x[k];
+        x[k] = z;
         i++;
     }
 }
