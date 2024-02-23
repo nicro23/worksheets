@@ -1,4 +1,4 @@
-#include<bits-stdc++.h>
+#include<iostream>
 using namespace std;
 
 void main()
@@ -31,6 +31,6 @@ void main()
 	}
 	else
 	{
-		cout << "suffer :D";
+		cout << "not horray";
 	}
 }
