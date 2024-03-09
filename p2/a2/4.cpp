@@ -58,7 +58,6 @@ void check(char x[][40],int &turn,int sel_row,int sel_col, char c)
 		}
 		cout << endl;
 		cout << "!                                  NOT EMPTY! >:(                                   !" << endl;
-		k = 85;
 		cout << newl << endl;
 		turn--;
 	}
