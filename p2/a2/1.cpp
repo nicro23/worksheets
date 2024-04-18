@@ -44,20 +44,14 @@ void check_win(char x[][3], int sr, int sc, int& condition, char p)
 		{
 			ct_col++;
 		}
-	}
-	if (sr + sc == 4)
-	{
-		for (int i = 0; i < 3; i++)
+		if (sr + sc == 4)
 		{
 			if (x[i][2 - i] == p)
 			{
 				ct_left_diagonal++;
 			}
 		}
-	}
-	if (sr == sc)
-	{
-		for (int i = 0; i < 3; i++)
+		if (sr == sc)
 		{
 			if (x[i][i] == p)
 			{
