@@ -3,6 +3,11 @@
         "iostream": "cpp",
         "utility": "cpp",
         "xutility": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "atomic": "cpp",
+        "ios": "cpp",
+        "system_error": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp"
     }
 }
