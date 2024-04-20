@@ -29,12 +29,43 @@ void map(char x[][166], int r, int c)
 	cout.flush();
 
 }
+void user_action(char x[][166],char dir, int& r, int& c)
+{
+	if (dir == 'w')
+	{
+		r--;
+	}
+	if (dir == 's')
+	{
+		r++;
+	}
+	if (dir == 'a')
+	{
+		c--;
+	}
+	if (dir == 'd')
+	{
+		c++;
+	}
+	if (dir == 'f')
+	{
+		for (int i = 1; i < 6; i++)
+		{
+			x[r][c+i] = '>';
+			x[r][c + i - 1] = '-';
+		}
+	}
+}
 void main()
 {
-	int i, j, k, r, c;
+	int i, j, k, r, c, usr_r, usr_c, enmy1_r, enmy1_c;
 	char x[45][166];
 	r = 45;
 	c = 166;
+	usr_r = 22;
+	usr_c = 42;
+	enmy1_r = 22;
+	enmy1_c = 88;
 	while (true)
 	{
 		while (!_kbhit())
@@ -51,9 +82,12 @@ void main()
 				x[j][0] = '|';
 				x[j][165] = '|';
 			}
-			x[22][42] = 1;
+			//prototype moving objects
+			x[usr_r][usr_c] = 1;
+			x[enmy1_r][enmy1_c] = 2;
 			map(x, r, c);
 		}
 		char move = _getch();
+		user_action(x, _getch(), usr_r, usr_c);
 	}
 }
