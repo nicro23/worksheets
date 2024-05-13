@@ -262,54 +262,75 @@ void gravity(char x[][166], int mat_r, int mat_c, int& usr_r, int usr_c, int ene
     // bynzl kam cell
     int gravity = 1;
     // Check lw fy hga ta7tyh
-    if (usr_r + 6 < mat_r && x[usr_r + 6][usr_c] == ' ') {
+    if (usr_r + 6 < mat_r && x[usr_r + 6][usr_c - 2] == ' ' && x[usr_r + 6][usr_c + 2] == ' ') {
         usr_r += gravity;
     }
     //******** Trampoline??
     animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
 }
 //checks if hero is standing on the elevator
-void check_elevator(char x[][166], int mat_r, int mat_c, int &usr_r, int usr_c, int enemy1_r, int enemy1_c, int &platform_r, int platform_c, int platform_width, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_length, int ladder_width,int &is_platform_on_floor.int &platform_cd)
+void check_and_move_elevator(char x[][166], int mat_r, int mat_c, int &usr_r, int usr_c, int enemy1_r, int enemy1_c, int &platform_r, int platform_c, int platform_width, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_length, int ladder_width,int &is_platform_on_floor,int &platform_cd, int &is_hero_on_platform)
 {
-    int is_left_on_platform = 0;
-    //checks if usr's position is on the platform(works only for hero's standing dimensions, does't check every cell in the platform)
+    int i, is_left_on_platform = 0,k=0;
     if (is_platform_on_floor == 0)
     {
-        for (int i = platform_c; i < platform_width + platform_c; i++)
+        //minus from the cd
+        platform_cd--;
+        //when cd is less than 1
+        if (platform_cd < 1)
         {
-            if (usr_c - 3 == i)
+            //doc howa gowa el asansir nfso momken n5li g3fr yt7rk wla la2
+            //checks if user's position is on the platform
+            for (i = platform_c; i < platform_width + platform_c; i++)
             {
-                is_left_on_platform = 1;
-            }
-            if (usr_r + 6 == platform_r && usr_c + 3 == i && is_left_on_platform == 1)
-            {
-                for (int i = 0; i < 10; i++)
+                if (usr_c - 3 == i)
                 {
-                    usr_r--;
-                    platform_r--;
-                    animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
-                    map(x, mat_r, mat_c);
+                    is_left_on_platform = 1;
                 }
-                is_platform_on_floor = 1;
-                platform_cd = 999
-                break;
+                if (usr_r + 6 == platform_r && usr_c + 3 == i && is_left_on_platform == 1)
+                {
+                    k = 1;
+                }
+            }
+            if(k == 1)
+            {
+                //is_hero_on_platform = 1;
+                usr_r--;
+                platform_r--;
+                //10 equal to the height the platform will move(should be variable)
+                if(platform_r == 44 - 10)
+                {
+                    //flag platform to be not on floor
+                    is_platform_on_floor = 1;
+                    //set a cd to make platform stay in place
+                    platform_cd = 20;
+                    //set hero to not standing on the platform
+                    //is_hero_on_platform = 0;
+                }
             }
         }
     }
-    else
+    //when platform not on ground
+    if(is_platform_on_floor == 1)
     {
+        //minus from the cd
         platform_cd--;
-        if (platform_cd == 0)
+        //when cd is less than 1
+        if (platform_cd < 1)
         {
+            //start moving platform to the floor
             platform_r++;
+            //when platform is at floor
             if (platform_r == 44)
             {
+                //reset flag
                 is_platform_on_floor = 0;
+                platform_cd = 20;
             }
         }
     }
 }
-void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int mat_c, int& enemy1_r, int& enemy1_c, int platform_r, int platform_c,int platform_width, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_flag, int ladder_length, int ladder_width)
+void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int mat_c, int& enemy1_r, int& enemy1_c, int platform_r, int platform_c,int platform_width,int &is_hero_on_platform, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_flag, int ladder_length, int ladder_width)
 {
     ladder_flag = 0;
     for (int i = 0; i < ladder_length; i++)
@@ -358,14 +379,20 @@ void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int
     //move left if user pressed a
     if (dir == 'a')
     {
-        usr_c--;
-        animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+        if(is_hero_on_platform == 0 || (usr_c - 3) != platform_c)
+        {
+            usr_c--;
+            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width,bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+        }
     }
     //move right if user pressed d check char as a bound
     if (dir == 'd' && x[usr_r][usr_c + 5] != 73)
     {
-        usr_c++;
-        animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+        if(is_hero_on_platform == 0 || (usr_c + 4) != (platform_c + platform_width))
+        {
+            usr_c++;
+            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width,bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+        }
     }
     //gets the gun's row {subject to change}
     int gun_r = usr_r + 2;
@@ -477,7 +504,7 @@ int main()
     int mat_r, mat_c;
     int usr_r, usr_c;
     int enemy1_r, enemy1_c;
-    int platform_r, platform_c, platform_width, is_platform_on_floor, platform_cd;
+    int platform_r, platform_c, platform_width, is_platform_on_floor, platform_cd, is_hero_on_platform;
     int bullets_pos[100][2], ct_bullet = 0;
     int ladder_r, ladder_c, ladder_flag, ladder_length, ladder_width;
     char x[45][166];
@@ -496,6 +523,8 @@ int main()
     platform_c = 40;
     platform_width = 15;
     is_platform_on_floor = 0;
+    platform_cd = 0;
+    is_hero_on_platform = 0;
     //ladder position and flag
     //top left cell of the ladder
     ladder_r = 4;
@@ -525,16 +554,14 @@ int main()
             draw_hero(x, usr_r, usr_c);
             //gravity
             gravity(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
-            check_elevator(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width,is_platform_on_floor, platform_cd);
+            check_and_move_elevator(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width,is_platform_on_floor, platform_cd, is_platform_on_floor);
             //screen the matrix
             map(x, mat_r, mat_c);
-
-
         }
         //save user input
         char move = _getch();
         //take action based on input
-        user_action(x, move, usr_r, usr_c, mat_r, mat_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_flag, ladder_length, ladder_width);
+        user_action(x, move, usr_r, usr_c, mat_r, mat_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, is_hero_on_platform, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_flag, ladder_length, ladder_width);
         //*betsara3 el gravity lma ad5al input bas bt7el moshkelet lazer spamming wna tayer
         //gravity(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
 
