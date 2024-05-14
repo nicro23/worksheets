@@ -1,9 +1,13 @@
-#include <iostream>
+#include<iostream>
 #include<stdio.h>
 #include<conio.h>
 using namespace std;
-
-void clear(char x[][166], int mat_r, int mat_c)
+struct user 
+{
+    int r;
+    int c;
+};
+void clear(char x[][498], int mat_r, int mat_c)
 {
     //clear the matrix
     int i, j;
@@ -15,7 +19,7 @@ void clear(char x[][166], int mat_r, int mat_c)
         }
     }
 }
-void map(char x[][166], int mat_r, int mat_c)
+void map(char x[][498], int mat_r, int mat_c)
 {
     //screen the matrix
     int i, j;
@@ -30,7 +34,7 @@ void map(char x[][166], int mat_r, int mat_c)
     cout.flush();
 
 }
-void draw_hero(char x[][166], int usr_r, int usr_c)
+void draw_hero(char x[][498], user usr)
 {
     //draw hero ["center of gravity" = mouth]
     /*
@@ -39,82 +43,82 @@ void draw_hero(char x[][166], int usr_r, int usr_c)
         8 cols
     */
     //draw head
-    x[usr_r][usr_c] = '-';
-    x[usr_r][usr_c + 1] = '*';
-    x[usr_r][usr_c - 1] = '*';
-    x[usr_r][usr_c + 2] = ']';
-    x[usr_r][usr_c - 2] = '[';
+    x[usr.r][usr.c] = '-';
+    x[usr.r][usr.c + 1] = '*';
+    x[usr.r][usr.c - 1] = '*';
+    x[usr.r][usr.c + 2] = ']';
+    x[usr.r][usr.c - 2] = '[';
     //draw torso
-    x[usr_r + 1][usr_c] = 208;//╨
-    x[usr_r + 1][usr_c + 1] = 196;//─
-    x[usr_r + 1][usr_c - 1] = 196;//─
-    x[usr_r + 1][usr_c + 2] = 209;//╤
-    x[usr_r + 2][usr_c + 2] = 179;//│
-    x[usr_r + 1][usr_c - 2] = 209;//╤
-    x[usr_r + 2][usr_c - 2] = 179;//│
-    x[usr_r + 2][usr_c - 1] = ' ';
-    x[usr_r + 2][usr_c] = ' ';
-    x[usr_r + 2][usr_c + 1] = ' ';
-    x[usr_r + 3][usr_c] = 196;//─
-    x[usr_r + 3][usr_c + 1] = 196;//─
-    x[usr_r + 3][usr_c - 1] = 196;//─
-    x[usr_r + 3][usr_c + 2] = 180;//┤
-    x[usr_r + 3][usr_c - 2] = 195;//├
+    x[usr.r + 1][usr.c] = 208;//╨
+    x[usr.r + 1][usr.c + 1] = 196;//─
+    x[usr.r + 1][usr.c - 1] = 196;//─
+    x[usr.r + 1][usr.c + 2] = 209;//╤
+    x[usr.r + 2][usr.c + 2] = 179;//│
+    x[usr.r + 1][usr.c - 2] = 209;//╤
+    x[usr.r + 2][usr.c - 2] = 179;//│
+    x[usr.r + 2][usr.c - 1] = ' ';
+    x[usr.r + 2][usr.c] = ' ';
+    x[usr.r + 2][usr.c + 1] = ' ';
+    x[usr.r + 3][usr.c] = 196;//─
+    x[usr.r + 3][usr.c + 1] = 196;//─
+    x[usr.r + 3][usr.c - 1] = 196;//─
+    x[usr.r + 3][usr.c + 2] = 180;//┤
+    x[usr.r + 3][usr.c - 2] = 195;//├
     //draw right hand("free hand")
-    x[usr_r + 1][usr_c - 3] = 218;//┌
-    x[usr_r + 2][usr_c - 3] = 179;//│
-    x[usr_r + 3][usr_c - 3] = 179;//│
+    x[usr.r + 1][usr.c - 3] = 218;//┌
+    x[usr.r + 2][usr.c - 3] = 179;//│
+    x[usr.r + 3][usr.c - 3] = 179;//│
     //draw left hand("gun hand")
-    x[usr_r + 1][usr_c + 3] = 191;//┐
-    x[usr_r + 2][usr_c + 3] = 192;//└
-    x[usr_r + 2][usr_c + 4] = 216;//╪
+    x[usr.r + 1][usr.c + 3] = 191;//┐
+    x[usr.r + 2][usr.c + 3] = 192;//└
+    x[usr.r + 2][usr.c + 4] = 216;//╪
     //draw left leg("kowsa")
-    x[usr_r + 4][usr_c + 2] = 179;//│
-    x[usr_r + 5][usr_c + 2] = 179;//│
+    x[usr.r + 4][usr.c + 2] = 179;//│
+    x[usr.r + 5][usr.c + 2] = 179;//│
     //draw right leg("bsl")
-    x[usr_r + 4][usr_c - 2] = 179;//│
-    x[usr_r + 5][usr_c - 2] = 179;//│
+    x[usr.r + 4][usr.c - 2] = 179;//│
+    x[usr.r + 5][usr.c - 2] = 179;//│
     //-------//
     //prototype moving objects
     /* proto frame 1
     //draw hero ["center of gravity" = mouth]
     //draw head
-    x[usr_r][usr_c] = '-';
-    x[usr_r][usr_c + 1] = '*';
-    x[usr_r][usr_c - 1] = '*';
-    x[usr_r][usr_c + 2] = ']';
-    x[usr_r][usr_c - 2] = '[';
+    x[usr.r][usr.c] = '-';
+    x[usr.r][usr.c + 1] = '*';
+    x[usr.r][usr.c - 1] = '*';
+    x[usr.r][usr.c + 2] = ']';
+    x[usr.r][usr.c - 2] = '[';
     //draw torso
-    x[usr_r + 1][usr_c] = 208;//╨
-    x[usr_r + 1][usr_c + 1] = 196;//─
-    x[usr_r + 1][usr_c - 1] = 196;//─
-    x[usr_r + 1][usr_c + 2] = 209;//╤
-    x[usr_r + 2][usr_c + 2] = 179;//│
-    x[usr_r + 1][usr_c - 2] = 209;//╤
-    x[usr_r + 2][usr_c - 2] = 179;//│
-    x[usr_r + 3][usr_c] = 196;//─
-    x[usr_r + 3][usr_c + 1] = 196;//─
-    x[usr_r + 3][usr_c - 1] = 196;//─
-    x[usr_r + 3][usr_c + 2] = 180;//┤
-    x[usr_r + 3][usr_c - 2] = 92;//
+    x[usr.r + 1][usr.c] = 208;//╨
+    x[usr.r + 1][usr.c + 1] = 196;//─
+    x[usr.r + 1][usr.c - 1] = 196;//─
+    x[usr.r + 1][usr.c + 2] = 209;//╤
+    x[usr.r + 2][usr.c + 2] = 179;//│
+    x[usr.r + 1][usr.c - 2] = 209;//╤
+    x[usr.r + 2][usr.c - 2] = 179;//│
+    x[usr.r + 3][usr.c] = 196;//─
+    x[usr.r + 3][usr.c + 1] = 196;//─
+    x[usr.r + 3][usr.c - 1] = 196;//─
+    x[usr.r + 3][usr.c + 2] = 180;//┤
+    x[usr.r + 3][usr.c - 2] = 92;//
     //draw right hand("free hand")
-    x[usr_r + 1][usr_c - 3] = 218;//┌
-    x[usr_r + 2][usr_c - 3] = 92;//
-    //x[usr_r + 3][usr_c - 3] = 179;//│
+    x[usr.r + 1][usr.c - 3] = 218;//┌
+    x[usr.r + 2][usr.c - 3] = 92;//
+    //x[usr.r + 3][usr.c - 3] = 179;//│
     //draw left hand("gun hand")
-    x[usr_r + 1][usr_c + 3] = 191;//┐
-    x[usr_r + 2][usr_c + 3] = 192;//└
-    x[usr_r + 2][usr_c + 4] = 216;//╪
+    x[usr.r + 1][usr.c + 3] = 191;//┐
+    x[usr.r + 2][usr.c + 3] = 192;//└
+    x[usr.r + 2][usr.c + 4] = 216;//╪
     //draw left leg("kowsa")
-    x[usr_r + 4][usr_c + 2] = 92;//
-    //x[usr_r + 5][usr_c + 2] = 179;//
-    x[usr_r + 5][usr_c + 3] = 92;//
+    x[usr.r + 4][usr.c + 2] = 92;//
+    //x[usr.r + 5][usr.c + 2] = 179;//
+    x[usr.r + 5][usr.c + 3] = 92;//
     //draw right leg("bsl")
-    x[usr_r + 4][usr_c - 2] = 179;//│
-    x[usr_r + 5][usr_c - 2] = 179;//│
+    x[usr.r + 4][usr.c - 2] = 179;//│
+    x[usr.r + 5][usr.c - 2] = 179;//│
     */
 }
-void draw_fixed(char x[][166], int mat_r, int mat_c, int ladder_r, int ladder_c, int ladder_length, int ladder_width)
+void draw_fixed(char x[][498], int mat_r, int mat_c, int ladder_r, int ladder_c, int ladder_length, int ladder_width)
 {
     int i, j, k;
 
@@ -129,15 +133,16 @@ void draw_fixed(char x[][166], int mat_r, int mat_c, int ladder_r, int ladder_c,
         x[j][0] = '|';
         x[j][165] = '|';
     }
-    //draw hill1
-    //for (i = 0; i < 10; i++)
-        //draw elevator
-        //Trampoline?
-        //for (i = 0; i < 15; i++)
-        //{
-            //elevator
-         //   x[43][38 + i] = 'T';
-        //}
+    //draw first hill
+    for (i = 0; i < 14; i++)
+    {
+        x[30 + i][38] = 179;
+    }
+    x[29][38] = 218;//┌
+    for (j = 0; j < 126; j++)
+    {
+        x[29][39 + j] = 196;
+    }
     //draw ladder
     int ladder_c_tmp = ladder_c;
     for (int i = 0; i < ladder_length; i++)
@@ -148,12 +153,11 @@ void draw_fixed(char x[][166], int mat_r, int mat_c, int ladder_r, int ladder_c,
             x[ladder_r][ladder_c_tmp++] = '=';
         }
         x[ladder_r][ladder_c_tmp++] = '|';
-
         ladder_r++;
         ladder_c_tmp = ladder_c;
     }
 }
-void draw_platform(char x[][166], int platform_r, int platform_c, int platform_width)
+void draw_platform(char x[][498], int platform_r, int platform_c, int platform_width)
 {
     int i;
     //stair change place to variables
@@ -164,11 +168,11 @@ void draw_platform(char x[][166], int platform_r, int platform_c, int platform_w
     }
     x[platform_r][platform_c + i] = 232;
 }
-void draw_enemy1(char x[][166], int enemy1_r, int enemy1_c)
+void draw_enemy1(char x[][498], int enemy1_r, int enemy1_c)
 {
     x[enemy1_r][enemy1_c] = 2;
 }
-void draw_bullets(char x[][166], int bullets_pos[][2], int ct_bullet)
+void draw_bullets(char x[][498], int bullets_pos[][2], int ct_bullet)
 {
     //loop over number of bullets
     while (ct_bullet)
@@ -181,7 +185,7 @@ void draw_bullets(char x[][166], int bullets_pos[][2], int ct_bullet)
         ct_bullet--;
     }
 }
-void move_bullets(char x[][166], int bullets_pos[][2], int& ct_bullet)
+void move_bullets(char x[][498], int bullets_pos[][2], int& ct_bullet)
 {
     //reload bullet algoritihim
     // write code here
@@ -239,7 +243,7 @@ void move_bullets(char x[][166], int bullets_pos[][2], int& ct_bullet)
     }*/
 }
 //contains all the draw and moves functions
-void animation(char x[][166], int mat_r, int mat_c, int usr_r, int usr_c, int enemy1_r, int enemy1_c, int platform_r, int platform_c, int platform_width, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_length, int ladder_width)
+void animation(char x[][498], int mat_r, int mat_c, user usr, int enemy1_r, int enemy1_c, int platform_r, int platform_c, int platform_width, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_length, int ladder_width)
 {
     //clear the matrix
     clear(x, mat_r, mat_c);
@@ -254,23 +258,23 @@ void animation(char x[][166], int mat_r, int mat_c, int usr_r, int usr_c, int en
     move_bullets(x, bullets_pos, ct_bullet);
     draw_bullets(x, bullets_pos, ct_bullet);
     //draw hero
-    draw_hero(x, usr_r, usr_c);
+    draw_hero(x, usr);
     //screen the matrix
 }
 //gravity,trampoline(no more trampoline :<)
-void gravity(char x[][166], int mat_r, int mat_c, int& usr_r, int usr_c, int enemy1_r, int enemy1_c, int platform_r, int platform_c, int platform_width, int bullets_pos[][2], int ct_bullet, int ladder_r, int ladder_c, int ladder_length, int ladder_width) {
+void gravity(char x[][498], int mat_r, int mat_c, user& usr, int enemy1_r, int enemy1_c, int platform_r, int platform_c, int platform_width, int bullets_pos[][2], int ct_bullet, int ladder_r, int ladder_c, int ladder_length, int ladder_width) {
     // bynzl kam cell
     int gravity = 1;
     // Check lw fy hga ta7tyh
-    if (usr_r + 6 < mat_r && x[usr_r + 6][usr_c - 2] == ' ' && x[usr_r + 6][usr_c + 2] == ' ') 
+    if (usr.r + 6 < mat_r && x[usr.r + 6][usr.c - 2] == ' ' && x[usr.r + 6][usr.c + 2] == ' ') 
     {
-        usr_r += gravity;
+        usr.r += gravity;
     }
     //******** Trampoline??
-    animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+    animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
 }
 //checks if hero is standing on the elevator
-void check_and_move_elevator(char x[][166], int mat_r, int mat_c, int& usr_r, int usr_c, int enemy1_r, int enemy1_c, int& platform_r, int platform_c, int platform_width, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_length, int ladder_width, int& is_platform_on_floor, int& platform_cd, int& is_hero_on_platform)
+void check_and_move_elevator(char x[][498], int mat_r, int mat_c, user& usr, int enemy1_r, int enemy1_c, int& platform_r, int platform_c, int platform_width, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_length, int ladder_width, int& is_platform_on_floor, int& platform_cd, int& is_hero_on_platform)
 {
     int i, is_left_on_platform = 0;
     if (is_platform_on_floor == 0)
@@ -284,11 +288,11 @@ void check_and_move_elevator(char x[][166], int mat_r, int mat_c, int& usr_r, in
             //checks if user's position is on the platform
             for (i = platform_c; i < platform_width + platform_c; i++)
             {
-                if (usr_c - 3 == i)
+                if (usr.c - 3 == i)
                 {
                     is_left_on_platform = 1;
                 }
-                if (usr_r + 6 == platform_r && usr_c + 3 == i && is_left_on_platform == 1)
+                if (usr.r + 6 == platform_r && usr.c + 3 == i && is_left_on_platform == 1)
                 {
                     //sets hero to standing on a platform
                     is_hero_on_platform = 1;
@@ -297,7 +301,7 @@ void check_and_move_elevator(char x[][166], int mat_r, int mat_c, int& usr_r, in
             if (is_hero_on_platform == 1)
             {
                 //is_hero_on_platform = 1;
-                usr_r--;
+                usr.r--;
                 platform_r--;
                 //10 equal to the height the platform will move(should be variable)
                 if (platform_r == 44 - 10)
@@ -327,11 +331,11 @@ void check_and_move_elevator(char x[][166], int mat_r, int mat_c, int& usr_r, in
             //check if hero is standing on platform
             for (i = platform_c; i < platform_width + platform_c; i++)
             {
-                if (usr_c - 3 == i)
+                if (usr.c - 3 == i)
                 {
                     is_left_on_platform = 1;
                 }
-                if (usr_r + 6 == platform_r && usr_c + 3 == i && is_left_on_platform == 1)
+                if (usr.r + 6 == platform_r && usr.c + 3 == i && is_left_on_platform == 1)
                 {
                     //sets hero to standing on a platform
                     is_hero_on_platform = 1;
@@ -352,23 +356,23 @@ void check_and_move_elevator(char x[][166], int mat_r, int mat_c, int& usr_r, in
         }
     }
 }
-void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int mat_c, int& enemy1_r, int& enemy1_c, int platform_r, int platform_c, int platform_width, int& is_hero_on_platform, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_flag, int ladder_length, int ladder_width)
+void user_action(char x[][498], char dir, user& usr, int mat_r, int mat_c, int& enemy1_r, int& enemy1_c, int platform_r, int platform_c, int platform_width, int& is_hero_on_platform, int bullets_pos[][2], int& ct_bullet, int ladder_r, int ladder_c, int ladder_flag, int ladder_length, int ladder_width)
 {
     ladder_flag = 0;
     for (int i = 0; i < ladder_length; i++)
     {
-        if ((usr_r + 5) == (ladder_r + i))
+        if ((usr.r + 5) == (ladder_r + i))
         {
             for (int j = 0; j < ladder_width; j++)
             {
-                if (usr_c == (ladder_c + j))
+                if (usr.c == (ladder_c + j))
                 {
                     ladder_flag = 1;
                 }
             }
         }
     }
-    /*if ((x[usr_r+ 5][usr_c-1] == '|'&& x[usr_r + 5][usr_c + 1] == '=')||(x[usr_r + 5][usr_c - 1] == '=' && x[usr_r + 5][usr_c + 1] == '|'))
+    /*if ((x[usr.r+ 5][usr.c-1] == '|'&& x[usr.r + 5][usr.c + 1] == '=')||(x[usr.r + 5][usr.c - 1] == '=' && x[usr.r + 5][usr.c + 1] == '|'))
     {
 
         ladder_flag = 1;
@@ -382,47 +386,47 @@ void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int
     {
         if (dir == 'w')
         {
-            usr_r--;
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            usr.r--;
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
         }
     }
     //move up if user pressed w
     /*if (dir == 'w')
     {
-        usr_r--;
-        animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+        usr.r--;
+        animation(x, mat_r, mat_c, usr.r, usr.c, enemy1_r, enemy1_c, platform_r, platform_c, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
     }*/
     //move down if user pressed s while on a ladder
     if (ladder_flag == 1)
     {
-        if (dir == 's' && usr_r < 38)
+        if (dir == 's' && usr.r < 38)
         {
-            usr_r++;
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            usr.r++;
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
         }
     }
     //move left if user pressed a
     if (dir == 'a')
     {
-        if (is_hero_on_platform == 0 || (usr_c - 3) != platform_c)
+        if (is_hero_on_platform == 0 || (usr.c - 3) != platform_c)
         {
-            usr_c--;
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            usr.c--;
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
         }
     }
     //move right if user pressed d check char as a bound
-    if (dir == 'd' && x[usr_r][usr_c + 5] != 73)
+    if (dir == 'd' && x[usr.r][usr.c + 4] != '|')
     {
-        if (is_hero_on_platform == 0 || (usr_c + 4) != (platform_c + platform_width))
+        if (is_hero_on_platform == 0 || (usr.c + 4) != (platform_c + platform_width))
         {
-            usr_c++;
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            usr.c++;
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
         }
     }
     //gets the gun's row {subject to change}
-    int gun_r = usr_r + 2;
+    int gun_r = usr.r + 2;
     //gets the gun's col {subject to change}
-    int gun_c = usr_c + 4;
+    int gun_c = usr.c + 4;
     //shoot an arrow if user pressed e
     if (dir == 'e')
     {
@@ -438,7 +442,7 @@ void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int
         for (i = 1; x[gun_r][gun_c + i] == ' ' && i < 5; i++)
         {
             //make things move while inside loop
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
             //checks collision [currently checks with enemy1 only]
 
             //throws grapple
@@ -461,19 +465,19 @@ void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int
             //if you catched enemy
             //(sudden >:) animation)
             //move&display hero to infront of enemy
-            usr_c += i - 1;
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            usr.c += i - 1;
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
             map(x, mat_r, mat_c);
             //draw hero behind enemy*needs to be changed to dynamic*
-            usr_c += 11;
+            usr.c += 11;
             //redraw map
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
             //draw hit animation
-            x[gun_r - 2][usr_c - 8] = 92;
-            x[gun_r - 1][usr_c - 7] = 92;
-            x[gun_r][usr_c - 6] = 92;
-            x[gun_r + 1][usr_c - 5] = 92;
-            x[gun_r + 2][usr_c - 4] = 92;
+            x[gun_r - 2][usr.c - 8] = 92;
+            x[gun_r - 1][usr.c - 7] = 92;
+            x[gun_r][usr.c - 6] = 92;
+            x[gun_r + 1][usr.c - 5] = 92;
+            x[gun_r + 2][usr.c - 4] = 92;
             //kill enemy
             enemy1_r = -1;
             //display
@@ -481,7 +485,7 @@ void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int
 
             //animation
             //for(k=1;k<i;k++)
-            // usr_c++;
+            // usr.c++;
             // clear(x, mat_r, mat_c);
             //
             //
@@ -503,9 +507,9 @@ void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int
         if (x[gun_r][gun_c + i] == 2)
         {
             //touched enemy
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
             map(x, mat_r, mat_c);
-            animation(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            animation(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
             x[enemy1_r][enemy1_c] = 248;
             x[enemy1_r][enemy1_c - 2] = 248;
             x[enemy1_r + 1][enemy1_c - 1] = 248;
@@ -517,45 +521,44 @@ void user_action(char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int
     //dodge button
     if (dir == 'z')
     {
-        usr_c += 10;
+        usr.c += 10;
     }
 
 
 }
-
 int main()
 {
-    //combo 1 para: (char x[][166], char dir, int& usr_r, int& usr_c, int mat_r, int mat_c, int& enemy1_r, int& enemy1_c,int platform_r, int platform_c, int bullets_pos[][2],int &ct_bullet,int ladder_r, int ladder_c, int ladder_length)
+    //combo 1 para: (char x[][498], char dir, int& usr.r, int& usr.c, int mat_r, int mat_c, int& enemy1_r, int& enemy1_c,int platform_r, int platform_c, int bullets_pos[][2],int &ct_bullet,int ladder_r, int ladder_c, int ladder_length)
     int mat_r, mat_c;
-    int usr_r, usr_c;
+    user usr;
     int enemy1_r, enemy1_c;
     int platform_r, platform_c, platform_width, is_platform_on_floor, platform_cd, is_hero_on_platform;
     int bullets_pos[100][2], ct_bullet = 0;
     int ladder_r, ladder_c, ladder_flag, ladder_length, ladder_width;
-    char x[45][166];
+    char x[45][498];
     //size of mat
     mat_r = 45;
     mat_c = 166;
     //usr position
-    usr_r = 38;
-    //usr_c = 80;
-    usr_c = 20;
+    usr.r = 38;
+    //usr.c = 80;
+    usr.c = 20;
     //enemy1 position
     enemy1_r = 38;
     enemy1_c = 150;
     //platform position
     platform_r = 44;
-    platform_c = 40;
+    platform_c = 196;
     platform_width = 15;
     is_platform_on_floor = 0;
     platform_cd = 0;
     is_hero_on_platform = 0;
     //ladder position and flag
     //top left cell of the ladder
-    ladder_r = 4;
+    ladder_r = 29;
     ladder_c = 30;
     ladder_flag = 0;
-    ladder_length = 40;
+    ladder_length = 15;
     ladder_width = 8;
     //infinite loop
     while (true)
@@ -576,29 +579,29 @@ int main()
             move_bullets(x, bullets_pos, ct_bullet);
             draw_bullets(x, bullets_pos, ct_bullet);
             //draw hero
-            draw_hero(x, usr_r, usr_c);
+            draw_hero(x, usr);
             //gravity
-            gravity(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
-            check_and_move_elevator(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width, is_platform_on_floor, platform_cd, is_hero_on_platform);
+            gravity(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+            check_and_move_elevator(x, mat_r, mat_c, usr, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width, is_platform_on_floor, platform_cd, is_hero_on_platform);
             //screen the matrix
             map(x, mat_r, mat_c);
         }
         //save user input
         char move = _getch();
         //take action based on input
-        user_action(x, move, usr_r, usr_c, mat_r, mat_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, is_hero_on_platform, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_flag, ladder_length, ladder_width);
+        user_action(x, move, usr, mat_r, mat_c, enemy1_r, enemy1_c, platform_r, platform_c, platform_width, is_hero_on_platform, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_flag, ladder_length, ladder_width);
         //*betsara3 el gravity lma ad5al input bas bt7el moshkelet lazer spamming wna tayer
-        //gravity(x, mat_r, mat_c, usr_r, usr_c, enemy1_r, enemy1_c, platform_r, platform_c, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
+        //gravity(x, mat_r, mat_c, usr.r, usr.c, enemy1_r, enemy1_c, platform_r, platform_c, bullets_pos, ct_bullet, ladder_r, ladder_c, ladder_length, ladder_width);
 
     }
 }
 /*
-void MoveHero(int& usr_r, int& usr_c, char dir, int& ladder_flag, char X[][80])
+void MoveHero(int& usr.r, int& usr.c, char dir, int& ladder_flag, char X[][80])
 {
     ladder_flag = 0;
     while (true)
     {
-        if ((X[usr_r+1][usr_c-1] == '|'&& X[usr_r+1][usr_c + 1] == '=')||(X[usr_r + 1][usr_c - 1] == '=' && X[usr_r + 1][usr_c + 1] == '|'))
+        if ((X[usr.r+1][usr.c-1] == '|'&& X[usr.r+1][usr.c + 1] == '=')||(X[usr.r + 1][usr.c - 1] == '=' && X[usr.r + 1][usr.c + 1] == '|'))
         {
 
             ladder_flag = 1;
@@ -613,18 +616,18 @@ void MoveHero(int& usr_r, int& usr_c, char dir, int& ladder_flag, char X[][80])
     if (ladder_flag == 1)
     {
         if (dir == 'w') {
-            usr_r--;
+            usr.r--;
         }
     }
     if (dir == 's') {
-        usr_r++;
+        usr.r++;
     }
     if (dir == 'a') {
-        usr_c--;
+        usr.c--;
     }
     if (dir == 'd')
     {
-        usr_c++;
+        usr.c++;
     }
 
 }
