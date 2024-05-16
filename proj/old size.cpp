@@ -55,11 +55,18 @@ struct hill
     int is_left_wall;
     int is_horizontal_wall;
 };
+struct wall
+{
+    int r;
+    int c;
+    int is_horizontal;
+    int length;
+};
 void clear(char x[][498])
 {
     //clear the matrix
     int i, j;
-    for (i = 0; i < 30; i++)
+    for (i = 0; i < 45; i++)
     {
         for (j = 0; j < 498; j++)
         {
@@ -72,9 +79,9 @@ void map(char x[][498], matrix mat)
     //screen the matrix
     int i, j;
     system("cls");
-    for (i = (mat.r - 30); i < mat.r; i++)
+    for (i = (mat.r - (45 - 15)); i < mat.r; i++)
     {
-        for (j = (mat.c - 115); j < mat.c; j++)
+        for (j = (mat.c - (166 - 51)); j < mat.c; j++)
         {
             cout << x[i][j];
         }
@@ -171,14 +178,14 @@ void draw_fixed(char x[][498], matrix mat, ldder ladder, hill hills[], int ct_hi
     int i, j, k;
 
     //draw borders
-    for (i = (mat.c - 115); i < mat.c; i++)
+    for (i = (mat.c - (166 - 51)); i < mat.c; i++)
     {
         x[0][i] = '-';
-        x[29][i] = '-';
+        x[44 - 15][i] = '-';
     }
     for (j = 1; j + 1 < mat.r; j++)
     {
-        x[j][(mat.c - 115)] = '|';
+        x[j][(mat.c - (166 - 51))] = '|';
         x[j][(mat.c - 1)] = '|';
     }
     //draw walls
@@ -186,20 +193,17 @@ void draw_fixed(char x[][498], matrix mat, ldder ladder, hill hills[], int ct_hi
     while (ct_hills)
     {
         //draw verticals
-        if (hills[ct_hills].is_left_wall == 1 || hills[ct_hills].is_right_wall == 1)
+        for (i = hills[ct_hills].start_r; i < hills[ct_hills].end_r; i++)
         {
-            for (i = hills[ct_hills].start_r; i < hills[ct_hills].end_r; i++)
+            if (hills[ct_hills].is_left_wall == 1)
             {
-                if (hills[ct_hills].is_left_wall == 1)
-                {
-                    x[i][hills[ct_hills].start_c] = 179; //│
-                }
-                if (hills[ct_hills].is_right_wall == 1)
-                {
-                    x[i][hills[ct_hills].end_c] = 179; //│
-                }
-
+                x[i][hills[ct_hills].start_c] = 179; //│
             }
+            if (hills[ct_hills].is_right_wall == 1)
+            {
+                x[i][ hills[ct_hills].end_c] = 179; //│
+            }
+
         }
         //draw corners
         if (hills[ct_hills].is_left_wall == 1 && hills[ct_hills].is_horizontal_wall == 1)
@@ -379,7 +383,7 @@ void check_and_move_elevator(char x[][498], user& usr, platfrm &platform)
             {
                 usr.r--;
                 platform.r--;
-                if (platform.r == 29 - platform.top)
+                if (platform.r == (44 - 15) - platform.top)
                 {
                     //flag platform to be not on floor
                     platform.is_platform_on_floor = 1;
@@ -419,7 +423,7 @@ void check_and_move_elevator(char x[][498], user& usr, platfrm &platform)
             //start moving platform to the floor
             platform.r++;
             //when platform is at floor
-            if (platform.r == 29)
+            if (platform.r == (44 - 15))
             {
                 //reset flag
                 platform.is_platform_on_floor = 0;
@@ -435,32 +439,32 @@ void check_next_level_and_scroll(char x[][498], matrix &mat, user &usr)
 {
     if (mat.do_scroll == 0)
     {
-        if (usr.c == 115)
+        if (usr.c == (166 - 51))
         {
             //tp usr to next scene and allow scrolling
-            mat.c += 115;
-            usr.r = 23;
-            usr.c = 116;
+            mat.c += (166 - 51);
+            usr.r = (38 - 15);
+            usr.c = (167 - 51);
             mat.do_scroll = 1;
         }
     }
     if (mat.do_scroll == 1)
     {
-        if (usr.c > (mat.c - mat.forward_boundary) && mat.c < 498)
+        if (usr.c > (mat.c - mat.forward_boundary))
         {
             mat.c += mat.scroll_speed;
         }
         //bounds
-        if (usr.c < (mat.c - mat.backward_boundary) && mat.c > 115 * 2)
+        if (usr.c < (mat.c - mat.backward_boundary) && mat.c > (166 - 51) * 2)
         {
             mat.c -= mat.scroll_speed;
         }
-        if (usr.c == 114)
+        if (usr.c == (165 - 51))
         {
             //tp usr to prev scene and stop scrolling
-            mat.c -= 115;
-            usr.r = 8;
-            usr.c = 113;
+            mat.c -= (166 -51);
+            usr.r = (23 - 15);
+            usr.c = (164 - 51);
             mat.do_scroll = 0;
         }
     }
@@ -657,7 +661,7 @@ void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, 
 int main()
 {
     //combo 1 para: (char x[][498], char dir, int& usr.r, int& usr.c, int mat_r, int mat_c, int& enemy1_r, int& enemy1_c,int platform.r, int platform.c, int bullets_pos[][2],int &ct_bullet,int ladder.r, int ladder.c, int ladder.length)
-    char x[30][498];
+    char x[45][498];
     matrix mat;
     user usr;
     enemy enemy1;
@@ -667,38 +671,35 @@ int main()
     hill hills[2 + 1];
     int ct_hills;
     //size of mat
-    mat.r = 30;
-    mat.c = 115;
-    mat.forward_boundary = 35;
-    mat.backward_boundary = 84;
+    mat.r = 45 - 15;
+    mat.c = 166 - 51;
+    mat.forward_boundary = 60;
+    mat.backward_boundary = 100;
     mat.scroll_speed = 1;
     mat.do_scroll = 0;
     //usr position
-    //scene 1
-   // usr.r = 23;
-   // usr.c = 20;
-    //scene 2
-    usr.r = 23;
-    usr.c = 115;
+    usr.r = 38 - 15;
+    //usr.c = 80;
+    usr.c = 20;
     usr.speed = 1;
     //enemy1 position
-    enemy1.r = 10;
-    enemy1.c = 99;
+    enemy1.r = 25;
+    enemy1.c = 150;
     //walls positions
-    ct_hills = 2;
+    ct_hills = 1;
     //hills positions
-    hills[1].start_r = 14;
-    hills[1].end_r = 29;
+    hills[1].start_r = 29 - 15;
+    hills[1].end_r = 44 - 15;
     hills[1].start_c = 38;
-    hills[1].end_c = 114;
+    hills[1].end_c = 165 -51;
     hills[1].is_left_wall = 1;
     hills[1].is_horizontal_wall = 1;
     hills[1].is_right_wall = 0;
-    hills[2].start_r = 14;
-    hills[2].end_r = 0;
-    hills[2].start_c = 115;
-    hills[2].end_c = 115 + 65;
-    hills[2].is_left_wall = 0;
+    hills[2].start_r = 29 - 15;
+    hills[2].end_r = 44 - 15;
+    hills[2].start_c = 38;
+    hills[2].end_c = 165 -51;
+    hills[2].is_left_wall = 1;
     hills[2].is_horizontal_wall = 1;
     hills[2].is_right_wall = 0;
     /*//vertical at first enterance
@@ -712,7 +713,7 @@ int main()
     walls[2].is_horizontal = 1;
     walls[2].length = 126;*/
     //platform position
-    platform.r = 29;
+    platform.r = 44 - 15;
     platform.c = 1;
     platform.width = 15;
     platform.top = 15;
@@ -721,7 +722,7 @@ int main()
     platform.is_hero_on_platform = 0;
     //ladder position and flag
     //top left cell of the ladder
-    ladder.r = 14;
+    ladder.r = 29 - 15;
     ladder.c = 30;
     ladder.flag_up = 0;
     ladder.flag_down = 0;
