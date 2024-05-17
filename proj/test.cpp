@@ -55,6 +55,15 @@ struct hill
     int is_left_wall;
     int is_horizontal_wall;
 };
+struct lva
+{
+    int r;
+    int c;
+    int width;
+    int top;
+    int is_hero_on_lava;
+    int is_passable;
+};
 void clear(char x[][498])
 {
     //clear the matrix
@@ -166,7 +175,7 @@ void draw_hero(char x[][498], user usr)
     x[usr.r + 5][usr.c - 2] = 179;//│
     */
 }
-void draw_fixed(char x[][498], matrix mat, ldder ladder, hill hills[], int ct_hills)
+void draw_fixed(char x[][498], matrix mat, ldder ladder, hill hills[], int ct_hills, lva lava)
 {
     int i, j, k;
 
@@ -232,6 +241,11 @@ void draw_fixed(char x[][498], matrix mat, ldder ladder, hill hills[], int ct_hi
         x[ladder.r][ladder_c_tmp++] = '|';
         ladder.r++;
         ladder_c_tmp = ladder.c;
+    }
+    //draw lava
+    for (i = 0 ;i < lava.width; i++)
+    {
+        x[lava.r][lava.c + i] = 247; //≈
     }
 }
 void draw_platform(char x[][498], platfrm platform)
@@ -320,12 +334,12 @@ void move_bullets(char x[][498], int bullets_pos[][2], int& ct_bullet)
     }*/
 }
 //contains all the draw and moves functions
-void animation(char x[][498], matrix mat, user usr, enemy enemy1, platfrm platform, int bullets_pos[][2], int& ct_bullet, ldder ladder, hill hills[], int ct_hills)
+void animation(char x[][498], matrix mat, user usr, enemy enemy1, platfrm platform, int bullets_pos[][2], int& ct_bullet, ldder ladder, hill hills[], int ct_hills, lva lava)
 {
     //clear the matrix
     clear(x);
     //draw fixed background [current: roof, floor]
-    draw_fixed(x, mat, ladder, hills, ct_hills);
+    draw_fixed(x, mat, ladder, hills, ct_hills, lava);
     //draw combo1 [platform,enemy1,hero]
     //draw platform
     draw_platform(x, platform);
@@ -339,7 +353,8 @@ void animation(char x[][498], matrix mat, user usr, enemy enemy1, platfrm platfo
     //screen the matrix
 }
 //gravity,trampoline(no more trampoline :<)
-void gravity(char x[][498], matrix mat, user& usr, enemy enemy1, platfrm platform, int bullets_pos[][2], int ct_bullet, ldder ladder, hill hills[], int ct_hills) {
+void gravity(char x[][498], matrix mat, user& usr, enemy enemy1, platfrm platform, int bullets_pos[][2], int ct_bullet, ldder ladder, hill hills[], int ct_hills,lva lava) 
+{
     // bynzl kam cell
     int gravity = 1;
     // Check lw fy hga ta7tyh
@@ -348,7 +363,7 @@ void gravity(char x[][498], matrix mat, user& usr, enemy enemy1, platfrm platfor
         usr.r += gravity;
     }
     //******** Trampoline??
-    animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+    animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
 }
 //checks if hero is standing on the elevator
 void check_and_move_elevator(char x[][498], user& usr, platfrm &platform)
@@ -469,7 +484,7 @@ void object_detection()
 {
 
 }
-void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, platfrm platform, int bullets_pos[][2], int& ct_bullet, ldder ladder, hill hills[], int ct_hills)
+void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, platfrm platform, int bullets_pos[][2], int& ct_bullet, ldder ladder, hill hills[], int ct_hills,lva lava)
 {
     ladder.flag_up = 0;
     ladder.flag_down = 0;
@@ -513,7 +528,7 @@ void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, 
         if (dir == 'w')
         {
             usr.r-= usr.speed;
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
         }
     }
     //move up if user pressed w
@@ -528,7 +543,7 @@ void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, 
         if (dir == 's' && usr.r + 5 < 45)
         {
             usr.r+= usr.speed;
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
         }
     }
     //move left if user pressed a
@@ -537,7 +552,7 @@ void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, 
         if (platform.is_hero_on_platform == 0 || (usr.c - 3) != platform.c)
         {
             usr.c-= usr.speed;
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
         }
     }
     //move right if user pressed d check char as a bound
@@ -546,7 +561,7 @@ void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, 
         if (platform.is_hero_on_platform == 0 || (usr.c + 4) != (platform.c + platform.width))
         {
             usr.c+= usr.speed;
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
         }
     }
     //gets the gun's row {subject to change}
@@ -568,7 +583,7 @@ void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, 
         for (i = 1; x[gun_r][gun_c + i] == ' ' && i < 5; i++)
         {
             //make things move while inside loop
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
             //checks collision [currently checks with enemy1 only]
 
             //throws grapple
@@ -592,12 +607,12 @@ void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, 
             //(sudden >:) animation)
             //move&display hero to infront of enemy
             usr.c += i - 1;
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
             map(x, mat);
             //draw hero behind enemy*needs to be changed to dynamic*
             usr.c += 11;
             //redraw map
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
             //draw hit animation
             x[gun_r - 2][usr.c - 8] = 92;
             x[gun_r - 1][usr.c - 7] = 92;
@@ -633,9 +648,9 @@ void user_action(char x[][498], char dir, user& usr, matrix mat, enemy &enemy1, 
         if (x[gun_r][gun_c + i] == 2)
         {
             //touched enemy
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
             map(x, mat);
-            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            animation(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
             x[enemy1.r][enemy1.c] = 248;
             x[enemy1.r][enemy1.c - 2] = 248;
             x[enemy1.r + 1][enemy1.c - 1] = 248;
@@ -664,8 +679,9 @@ int main()
     platfrm platform;
     int bullets_pos[100][2], ct_bullet = 0;
     ldder ladder;
-    hill hills[2 + 1];
-    int ct_hills;
+    hill hills[4 + 1];
+    int ct_hills = 4;
+    lva lava;
     //size of mat
     mat.r = 30;
     mat.c = 115;
@@ -684,36 +700,40 @@ int main()
     //enemy1 position
     enemy1.r = 10;
     enemy1.c = 99;
-    //walls positions
-    ct_hills = 2;
     //hills positions
     hills[1].start_r = 14;
-    hills[1].end_r = 29;
+    hills[1].end_r = 14 + 15; //29
     hills[1].start_c = 38;
-    hills[1].end_c = 114;
+    hills[1].end_c = 38 + 76; //114
     hills[1].is_left_wall = 1;
     hills[1].is_horizontal_wall = 1;
     hills[1].is_right_wall = 0;
     hills[2].start_r = 14;
     hills[2].end_r = 0;
-    hills[2].start_c = 115;
-    hills[2].end_c = 115 + 65;
+    hills[2].start_c = 114 + 1; //115
+    hills[2].end_c = 115 + 65;//180
     hills[2].is_left_wall = 0;
     hills[2].is_horizontal_wall = 1;
     hills[2].is_right_wall = 0;
-    /*//vertical at first enterance
-    walls[1].r = 30;
-    walls[1].c = 38;
-    walls[1].is_horizontal = 0;
-    walls[1].length = 14;
-    //horizontal at first enterance
-    walls[2].r = 29;
-    walls[2].c = 39;
-    walls[2].is_horizontal = 1;
-    walls[2].length = 126;*/
+    //
+    hills[3].start_r = 14;
+    hills[3].end_r = 0;
+    hills[3].start_c = 195 + 1; //196
+    hills[3].end_c = 197 + 48;//245
+    hills[3].is_left_wall = 0;
+    hills[3].is_horizontal_wall = 1;
+    hills[3].is_right_wall = 0;
+    //
+    hills[4].start_r = 14;
+    hills[4].end_r = 0;
+    hills[4].start_c = 330; //196
+    hills[4].end_c = 330 + 15;//345
+    hills[4].is_left_wall = 0;
+    hills[4].is_horizontal_wall = 1;
+    hills[4].is_right_wall = 0;
     //platform position
     platform.r = 29;
-    platform.c = 1;
+    platform.c = 180 + 1;
     platform.width = 15;
     platform.top = 15;
     platform.is_platform_on_floor = 0;
@@ -727,6 +747,12 @@ int main()
     ladder.flag_down = 0;
     ladder.length = 15;
     ladder.width = 8;
+    //lava position
+    lava.r = 29;
+    lava.c = 245;
+    lava.width = 115 - 30; //buffer of 10 blocks right and elft
+    lava.top = 5;
+    lava.is_hero_on_lava = 0;
     //infinite loop
     while (true)
     {
@@ -737,7 +763,7 @@ int main()
             clear(x);
             //draw fixed background [current: roof, floor]
             check_next_level_and_scroll(x, mat, usr);
-            draw_fixed(x, mat, ladder, hills, ct_hills);
+            draw_fixed(x, mat, ladder, hills, ct_hills, lava);
             //draw platform
             draw_platform(x, platform);
             //draw enemy 1
@@ -748,7 +774,7 @@ int main()
             //draw hero
             draw_hero(x, usr);
             //gravity
-            gravity(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+            gravity(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
             check_and_move_elevator(x, usr, platform);
             //screen the matrix
             map(x, mat);
@@ -756,7 +782,7 @@ int main()
         //save user input
         char move = _getch();
         //take action based on input
-        user_action(x, move, usr, mat, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
+        user_action(x, move, usr, mat, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills, lava);
         //*betsara3 el gravity lma ad5al input bas bt7el moshkelet lazer spamming wna tayer
         //gravity(x, mat, usr, enemy1, platform, bullets_pos, ct_bullet, ladder, hills, ct_hills);
 
