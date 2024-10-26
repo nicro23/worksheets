@@ -4,47 +4,47 @@ using namespace std;
 class node
 {
     public:
-    int val;
-    node* next;
+        int val;
+        node* next;
 };
 
 class list
 {
     public:
-    node* head;
-    node* tail;
-    //tmm? constructor, attach, destructor
-    list()
-    {
-        head = NULL;
-        tail = NULL;
-    }
-    void attach(node* pnn) //&?
-    {
-        if(head == NULL)
+        node* head;
+        node* tail;
+        //tmm? constructor, attach, destructor
+        list()
         {
+            head = NULL;
+            tail = NULL;
+        }
+        void attach(node* pnn) //&?
+        {
+            if(head == NULL)
+            {
             head = pnn;
             tail = pnn;
-        }
-        else
-        {
+            }
+            else
+            {
             tail->next = pnn;
             tail = pnn;
+            }
         }
-    }
-    ~list() //idk
-    {
-        node* trav = head;
-        while(trav != NULL)
+        ~list() //idk
         {
+            node* trav = head;
+            while(trav != NULL)
+            {
             head = head->next;
-            delete[] trav;
+            delete trav;
             trav = head;
+            }
         }
-    }   
 };
 //for debugging
-void disp(list x)
+void disp(list &x)
 {
     node* trav = x.head;
     while(trav != NULL)
@@ -55,7 +55,7 @@ void disp(list x)
     cout<<endl;
 }
 
-void ReverseList(list MainList)
+void ReverseList(list &MainList)
 {
     node* one = MainList.head;
     MainList.head = one->next;
@@ -72,18 +72,18 @@ void ReverseList(list MainList)
     MainList.head->next = one;
 }
 
-void ReverseList(list MainList, list List1)
+void ReverseList(list &MainList, list &List1)
 {
     node* t_tmp = MainList.tail;
     node* trav = MainList.head;
     node* temp = NULL;
-    
+
     while(t_tmp != MainList.head)
     {
         trav = MainList.head;
         while(trav->next != t_tmp)
         {
-            trav = trav->next;
+        trav = trav->next;
         }
         temp = new node;
         temp->val = t_tmp->val;
@@ -125,7 +125,7 @@ void ReverseList(list MainList, list List1)
 }
 
 void main()
-{
+    {
     list x;
     int n;
     node* pnn = NULL;
@@ -137,4 +137,19 @@ void main()
         pnn->next = NULL;
         x.attach(pnn);
     }
-}
+
+    /*
+    test 1:
+        disp(x);
+        ReverseList(x);
+        disp(x);
+    */
+    /*
+    test 2:
+        list y;
+        ReverseList(x,y);
+        disp(x);
+        disp(y);
+    */
+
+    }

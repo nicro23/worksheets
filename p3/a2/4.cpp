@@ -4,52 +4,52 @@ using namespace std;
 class node
 {
     public:
-    int val;
-    node* next;
+        int val;
+        node* next;
 };
 
 class list
 {
     public:
-    node* head;
-    node* tail;
-    //tmm? constructor, attach, destructor
-    list()
-    {
-        head = NULL;
-        tail = NULL;
-    }
-    void attach(node* pnn) //&?
-    {
-        if(head == NULL)
+        node* head;
+        node* tail;
+        //tmm? constructor, attach, destructor
+        list()
         {
+            head = NULL;
+            tail = NULL;
+        }
+        void attach(node* pnn) //&?
+        {
+            if(head == NULL)
+            {
             head = pnn;
             tail = pnn;
-        }
-        else
-        {
+            }
+            else
+            {
             tail->next = pnn;
             tail = pnn;
+            }
         }
-    }
-    ~list() //idk
-    {
-        node* trav = head;
-        while(trav != NULL)
+        ~list() //idk
         {
+            node* trav = head;
+            while(trav != NULL)
+            {
             head = head->next;
-            delete[] trav;
+            delete trav;
             trav = head;
+            }
         }
-    }   
 };
 //for debugging
-void disp(list x)
+void disp(list &x)
 {
     node* trav = x.head;
     while(trav != NULL)
     {
-        cout << trav->val<<" ";     
+        cout << trav->val<<" ";
         trav = trav->next;
     }
     cout<<endl;
@@ -79,13 +79,13 @@ void main()
     {
         if(ptrav->val > max)
         {
-            max = ptrav->val;
-            pmax = ptrav;
+        max = ptrav->val;
+        pmax = ptrav;
         }
         if(ptrav->val < min)
         {
-            min = ptrav->val;
-            pmin = ptrav;
+        min = ptrav->val;
+        pmin = ptrav;
         }
         ptrav = ptrav->next;
     }
@@ -94,11 +94,14 @@ void main()
         pnn = new node;
         pnn->val = pmin->val;
         pnn->next = NULL;
-        x2.attach(pnn);   
+        x2.attach(pnn);
         pmin = pmin->next;
     }
     pnn = new node;
     pnn->val = pmin->val;
-    pnn->next = x2.head->next; 
+    pnn->next = x2.head->next;
     x2.head->next = pnn;
+    //test
+    //   disp(x);
+    //   disp(x2);
 }
