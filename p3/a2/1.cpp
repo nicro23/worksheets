@@ -4,44 +4,44 @@ using namespace std;
 class node
 {
     public:
-    int val;
-    node* next;
+        int val;
+        node* next;
 };
 
 class list
 {
     public:
-    node* head;
-    node* tail;
-    //tmm? constructor, attach, destructor
-    list()
-    {
-        head = NULL;
-        tail = NULL;
-    }
-    void attach(node* pnn) //&?
-    {
-        if(head == NULL)
+        node* head;
+        node* tail;
+        //tmm? constructor, attach, destructor
+        list()
         {
+            head = NULL;
+            tail = NULL;
+        }
+        void attach(node* pnn) //&?
+        {
+            if(head == NULL)
+            {
             head = pnn;
             tail = pnn;
-        }
-        else
-        {
+            }
+            else
+            {
             tail->next = pnn;
             tail = pnn;
+            }
         }
-    }
-    ~list() //idk
-    {
-        node* trav = head;
-        while(trav != NULL)
+        ~list() //idk
         {
+            node* trav = head;
+            while(trav != NULL)
+            {
             head = head->next;
-            delete[] trav;
+            delete trav;
             trav = head;
+            }
         }
-    }   
 };
 //for debugging
 void disp(list& x)
@@ -53,9 +53,9 @@ void disp(list& x)
         trav = trav->next;
     }
     cout<<endl;
-}
+    }
 
-void SplitList_1(list MainList,int SplitVal,list List1,list List2)
+void SplitList_1(list &MainList,int SplitVal,list &List1,list &List2)
 {
     node* trav = MainList.head;
     node* temp = NULL;
@@ -72,13 +72,12 @@ void SplitList_1(list MainList,int SplitVal,list List1,list List2)
         temp = new node;
         temp->val = trav->val;
         temp->next = NULL;
-        List1.attach(temp);
-        List2.attach(trav);
+        List2.attach(temp);
         trav = trav->next;
     }
 }
 
-void SplitList_2(list MainList,int SplitVal,list List1,list List2)
+void SplitList_2(list &MainList,int SplitVal,list &List1,list &List2)
 {
     node* trav = MainList.head;
     // node* bk = NULL;
@@ -111,4 +110,22 @@ void main()
         pnn->next = NULL;
         x.attach(pnn);
     }
+    /*
+    test 1:
+        list y;
+        list z;
+        SplitList_1(x,20,y,z);
+        disp(x);
+        disp(y);
+        disp(z);
+    */
+    /*
+    test 2:
+        list y;
+        list z;
+        SplitList_2(x,20,y,z);
+        disp(x);
+        disp(y);
+        disp(z);
+    */
 }
