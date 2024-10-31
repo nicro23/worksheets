@@ -54,42 +54,6 @@ void disp(list& l)
     cout << endl;
 }
 
-void neg(list& l, list& nl)
-{
-    node* start = NULL;
-    node* end = NULL;
-    node* trav = l.head;
-    while (trav != NULL)
-
-        if (trav->next != NULL)
-        {
-            if (trav->next->val < 0)
-            {
-                start = trav;
-                end = trav->next->next;
-                while (1)
-                {
-                    if (end->val < 0)
-                    {
-                        if (nl.head == NULL)
-                        {
-                            nl.head = start->next;
-                        }
-                        else
-                        {
-                            nl.tail->next = start->next;
-                        }
-                        start->next = end->next;
-                        end->next = NULL;
-                        nl.tail = end;
-                        break;
-                    }
-                    end = end->next;
-                }
-            }
-            trav = trav->next;
-        }
-}
 int main()
 {
     list l[30];
@@ -108,18 +72,30 @@ int main()
     }
 
     //assume negative values cant be first or last + list 1 is bigger than list 2
-    list nl;
-    int j = 2 - 1;
-    for (int i = 0; i < 2 / 2; i++, j--)
+    for (int i = 0; i < 30 / 2; i++)
     {
-        neg(l[i], nl);
-        neg(l[j], nl);
+        node* trav1 = l[i].head;
+        node* trav2 = l[i + 1].head;
+        node* back2 = NULL;
+        while(trav1 != NULL)
+        {
+            if (trav1->val == -1)
+            {
+                back2->next = trav2->next;
+                trav2->next = trav1->next;
+                trav1->next = trav2;
+                trav2 = back2;
+                trav1 = trav1->next;
+            }
+            trav1 = trav1->next;
+            back2 = trav2;
+            trav2 = trav2->next;
+        }
     }
-    disp(nl);
-    //disp test:
-    for (int i = 0; i < 2; i++)
-    {
-        disp(l[i]);
-    }
+    /* 
+    test:
+        disp(l[0]);
+        disp(l[1]);
+    */
 
 }
