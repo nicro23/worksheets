@@ -44,7 +44,7 @@ class list
     }   
 };
 //for debugging
-void disp(list x)
+void disp(list& x)
 {
     node* trav = x.head;
     while(trav != NULL)
