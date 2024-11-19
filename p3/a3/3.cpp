@@ -116,10 +116,11 @@ int main()
         neg(l[j], nl);
     }
     disp(nl);
-    //disp test:
+    /*
+    disp test:
         for (int i = 0; i < 20; i++)
-        {
-            disp(l[i]);
-        }
-
+         {
+             disp(l[i]);
+         }
+    */
 }
