@@ -1,0 +1,22 @@
+for downloading icuras verilog + GTKWave + integrating them with visual studio (MacOS) 
+===============================================================================
+https://www.youtube.com/watch?v=jUYkYoYr8hs
+
+For windows:
+https://www.youtube.com/watch?v=fTfiqTIpAWM
+
+to run any iverilog file, simply write the following:
+
+->iverilog -o <name of vvp file for simulation>.vvp <testbench file>_tb.v
+the following is going to create vcd file
+->vvp <name of vvp file for simulation>.vvp
+
+
+====================================================================================
+initial begin
+    $dumpfile("output.vcd");
+    $dumpvars(0, <module_name>);
+end
+
+
+iverilog -o combiational_circuit_1_tb.vvp combinational_circuit_1_tb.v
