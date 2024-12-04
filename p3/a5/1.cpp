@@ -1,3 +1,4 @@
+
 #include<stdio.h>
 #include<iostream>
 using namespace std;
@@ -5,15 +6,27 @@ using namespace std;
 class cboard {
 public:
     int board[2][6];
-    int bt;
+    int move_to;
+    int cash[3];
+    char history[200];
     cboard* next;
     cboard()
     {
+        for(int i = 0; i < 6; i++)
+        {
+            if(i < 3)
+            {
+                cash[i] = 0;
+            }
+            board[0][i] = 0;
+            board[1][i] = 0;
+        }
+        move_to = 1;
         next = NULL;
     }
     cboard(cboard* pnn)
     {
-        bt = pnn->bt;
+
         for (int i = 0; i < 2; i++)
         {
             for (int j = 0; j < 6; j++)
@@ -21,46 +34,60 @@ public:
                 board[i][j] = pnn->board[i][j];
             }
         }
+        move_to = pnn->move_to;
+        for(int i = 0; i < 3; i++)
+        {
+            cash[i] = pnn->cash[i];
+        }
+        for(int i = 0; pnn->history[i] != '\0'; i++)
+        {
+            history[i] = pnn->history[i];
+            if(pnn->history[i + 1] == '\0')
+            {
+                history[i + 1] = '\0';
+            }
+        }
     }
 };
 
 class cstack {
 public:
-    cboard* head;
-    int ct;
-    cstack()
-    {
-        head = NULL;
-        ct = 0;
-    }
-    void push(cboard* pnn)
-    {
-        pnn->next = head;
-        head = pnn;
-        ct++;
-    }
-    cboard* pop()
-    {
-        if (head == NULL)
-        {
-            return NULL;
-        }
-        ct--;
-        cboard* trav = head;
-        head = head->next;
-        trav->next = NULL;
-        return trav;
-    }
-    /* ~cboard()
-    {
+	cboard* head;
+	int ct;
+	cstack()
+	{
+		head = NULL;
+		ct = 0;
+	}
+	void push(cboard* pnn)
+	{
+		pnn->next = head;
+		head = pnn;
+		ct++;
+	}
+	cboard* pop()
+	{
+		if (head == NULL)
+		{
+			return NULL;
+		}
+		ct--;
+		cboard* trav = head;
+		head = head->next;
+		trav->next = NULL;
+		return trav;
+	}
+	/* ~cboard()
+	{
 
-    } */
+	} */
 };
 
-cboard* init(cboard* pnn, int mx)
+cboard* init(cboard* pnn, int c1, int c2, int c3)
 {
+    pnn = new cboard;
     int x;
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 6; i++)
     {
         if (i == 0)
         {
@@ -70,123 +97,168 @@ cboard* init(cboard* pnn, int mx)
         {
             x = 0;
         }
-        for (int j = 0; j < 4 - 1; j++)
+        for (int j = 0; j < 6; j++)
         {
             pnn->board[i][j] = x;
         }
     }
-    //total money here
-    pnn->board[0][3] = mx;
+    pnn->cash[0] = c1;
+    pnn->cash[1] = c2;
+    pnn->cash[2] = c3;
     return pnn;
 }
 
-void disp(cboard* pnn,int n)
+void disp(cboard* pnn)
 {
-    for (int k = 0; k < n; k++)
+    cout<<"|m1|m2|m3|c1|c2|c3|"<<endl;
+	for (int i = 0; i < 2; i++)
+	{
+		cout << "|";
+		for (int j = 0; j < 6; j++)
+		{
+			cout << pnn->board[i][j] << '|';
+		}
+		cout << endl;
+		for (int k = 0; k < 6; k++)
+		{
+			cout << "--";
+		}
+		cout << endl;
+	}
+    for(int i = 0; i < 3; i++)
     {
-        cout << "--";
+        cout<<"|"<<pnn->cash[i];
     }
-    cout << "-"<<endl;
-    for (int i = 0; i < n; i++)
-    {
-        cout << "|";
-        for (int j = 0; j < n; j++)
-        {
-            cout<< pnn->board[i][j]<<'|';
-        }
-        cout << endl<<"-";
-        for (int k = 0; k < n; k++)
-        {
-            cout << "--";
-        }
-        cout << endl;
-    }
+    cout<<"|"<<endl;
 }
 
-void disp_st(cstack s, int n)
+void disp_st(cstack s)
 {
-    cboard* trav = s.head;
-    while (trav != NULL)
-    {
-        disp(trav, n);
-        for (int k = 0; k < n; k++)
-        {
-            cout << "**";
-        }
-        cout<<"*"<<endl;
-        trav = trav->next;
-    }
+	cboard* trav = s.head;
+	while (trav != NULL)
+	{
+		disp(trav);
+		for (int k = 0; k < 6; k++)
+		{
+			cout << "**";
+		}
+		cout << "*" << endl;
+		trav = trav->next;
+	}
 }
 
-int is_good(cboard* pnn, int i, int n)
+int is_good(cboard* pnn)
 {
-    int cur_row = pnn->cr - 1;
-    int cur_col = i;
-    int right_dia = cur_row + cur_col;
-    int left_dia = cur_row - cur_col;
-    for(int j = 0;j<n;j++)
+    int tot_m = 0, tot_c = 0;
+	for(int i = 0; i < 3;i++)
     {
-        for(int k = 0;k<n;k++)
+        if(pnn->board[0][i] == 1)
         {
-            if(pnn->board[j][k] =='Q' && (j+k) == right_dia && j != cur_row)
-            {
-                return 0;
-            }
-            if(pnn->board[j][k] =='Q' && (j-k) == left_dia && j != cur_row)
-            {
-                return 0;
-            }
+            tot_m += pnn->cash[i];
         }
-        if(pnn->board[j][cur_col] =='Q' && j != cur_row)
+        if(pnn->board[0][i + 3] == 1)
         {
-            return 0;
+            tot_c += pnn->cash[i];
         }
-        if(pnn->board[cur_row][j] =='Q' && j != cur_col)
+    }
+    if(tot_m != tot_c)
+    {
+        return 0;
+    }
+	return 1;
+}
+int is_same(cboard* s, cboard* t)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			if (s->board[i][j] != t->board[i][j])
+			{
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+int exist_st(cstack s, cboard* t)
+{
+	cboard* trav = s.head;
+	while (trav != NULL)
+	{
+		if (is_same(trav, t))
+		{
+			return 1;
+		}
+		trav = trav->next;
+	}
+	return 0;
+}
+
+int is_done(cboard* curr)
+{
+    for(int i = 0; i < 6; i++)
+    {
+        if(curr->board[1][i] == '0')
         {
             return 0;
         }
     }
     return 1;
 }
-void expand(cstack& s, cboard* trav,int n, cstack& good)
+void expand(cstack& s, cboard* trav, cstack& good)
 {
-    cboard* pnn = NULL;
-    for (int i = 0; i < n; i++)
-    {
-        pnn = new cboard(trav, n);
-        pnn->board[pnn->cr++][i] = 'Q';
-        if(is_good(pnn, i, n))
+	cboard* pnn = NULL;
+    int x;
+	for (int i = 0; i < 15; i++)
+	{
+        pnn = new cboard(trav);
+        x = pnn->move_to;
+        if(pnn->move_to)
         {
-            if(pnn->cr == n) {
+            pnn->move_to = 0;
+        }
+        else
+        {
+            pnn->move_to = 1;
+        }
+        
+        if (is_good(pnn) && !(exist_st(s, pnn)))
+        {
+            if (is_done(pnn))
+            {
                 good.push(pnn);
             }
-            else {
+            else 
+            {
                 s.push(pnn);
             }
         }
     }
 }
+
 int main()
 {
-    int n;
-    cstack s, good;
-    cboard* pnn = NULL;
-    cin >> n;
-    pnn = init(pnn, n);
-    pnn->cr = 0;
-    s.push(pnn);
-    cboard* trav = s.pop();
-    while (trav != NULL)
-    {
-    expand(s, trav, n, good);
-    trav = s.pop();
-    }
-    disp_st(good, n);
-    cout<<good.ct;
-    //pop
-    //expand children
-    //push if legal
+	int c1 = 800,c2 = 500,c3 = 300;
+	cstack s, good;
+	cboard* pnn = NULL;
+    //cin>>c1>>c2>>c3;
+	pnn = init(pnn, c1, c2, c3);
+    disp(pnn);
+	s.push(pnn);
+	cboard* trav = s.pop();
+	while (trav != NULL)
+	{
+		disp(trav);
+        expand(s, trav, n, good, 'w');
+		trav = s.pop();
+	}
+	disp_st(good);
+	cout << good.ct;
+	//pop
+	//expand children
+	//push if legal
 
-//    disp(pnn, n);
+    disp(pnn, n);
 
 }
