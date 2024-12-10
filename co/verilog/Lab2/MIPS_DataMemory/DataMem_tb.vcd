@@ -1,0 +1,85 @@
+$date
+	Sat Nov 30 22:13:42 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module DataMemory_tb $end
+$var wire 32 ! ReadData [31:0] $end
+$var reg 32 " Address [31:0] $end
+$var reg 1 # ByteEnable $end
+$var reg 1 $ HalfwordEnable $end
+$var reg 1 % MemRead $end
+$var reg 1 & MemWrite $end
+$var reg 1 ' WordEnable $end
+$var reg 32 ( WriteData [31:0] $end
+$scope module uut $end
+$var wire 32 ) Address [31:0] $end
+$var wire 1 # ByteEnable $end
+$var wire 1 $ HalfwordEnable $end
+$var wire 1 % MemRead $end
+$var wire 1 & MemWrite $end
+$var wire 1 ' WordEnable $end
+$var wire 32 * WriteData [31:0] $end
+$var reg 32 + ReadData [31:0] $end
+$scope begin $ivl_for_loop0 $end
+$var integer 32 , i [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b1000000000 ,
+b10010001101000101011001111000 +
+bx *
+b0 )
+bx (
+1'
+0&
+1%
+0$
+0#
+b0 "
+b10010001101000101011001111000 !
+$end
+#1
+b1001101010111100 !
+b1001101010111100 +
+b100 "
+b100 )
+1$
+0'
+#2
+b1110111100010010 (
+b1110111100010010 *
+b110 "
+b110 )
+0%
+1&
+#3
+b1110111100010010 !
+b1110111100010010 +
+1%
+0&
+#4
+b110100 (
+b110100 *
+1#
+0$
+0%
+1&
+#5
+b11010000010010 !
+b11010000010010 +
+0#
+1$
+1%
+0&
+#6

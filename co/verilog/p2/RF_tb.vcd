@@ -1,0 +1,100 @@
+$date
+	Sat Dec 07 12:22:26 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module RegisterFile_tb $end
+$var wire 8 ! ReadData [7:0] $end
+$var reg 32 " R_Address [31:0] $end
+$var reg 32 # W_Address [31:0] $end
+$var reg 8 $ WriteData [7:0] $end
+$var reg 1 % read_enable $end
+$var reg 1 & write_enable $end
+$scope module uut $end
+$var wire 32 ' R_Address [31:0] $end
+$var wire 32 ( W_Address [31:0] $end
+$var wire 8 ) WriteData [7:0] $end
+$var wire 1 % read_enable $end
+$var wire 1 & write_enable $end
+$var reg 8 * ReadData [7:0] $end
+$scope begin $ivl_for_loop0 $end
+$var integer 32 + i [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b1000 +
+b0 *
+bx )
+b0 (
+b0 '
+0&
+0%
+bx $
+b0 #
+b0 "
+b0 !
+$end
+#1
+1%
+#2
+b1 "
+b1 '
+#3
+b10 "
+b10 '
+#4
+b11 "
+b11 '
+#5
+b1 $
+b1 )
+b0 "
+b0 '
+0%
+1&
+#6
+b10 $
+b10 )
+b1 #
+b1 (
+#7
+b11 $
+b11 )
+b10 #
+b10 (
+#8
+b100 $
+b100 )
+b11 #
+b11 (
+#9
+b1 !
+b1 *
+1%
+0&
+#10
+b10 !
+b10 *
+b1 "
+b1 '
+#11
+b11 !
+b11 *
+b10 "
+b10 '
+#12
+b100 !
+b100 *
+b11 "
+b11 '
+#13
