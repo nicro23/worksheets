@@ -1,0 +1,191 @@
+$date
+	Sun Dec 22 01:06:45 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module MIPS_datapath_tb $end
+$var reg 2 ! aluop [1:0] $end
+$var reg 1 " branch $end
+$var reg 1 # clk $end
+$var reg 1 $ read_memory $end
+$var reg 1 % write_enable $end
+$var reg 1 & write_memory $end
+$scope module test $end
+$var wire 1 " branch $end
+$var wire 1 # clk $end
+$var wire 1 $ read_memory $end
+$var wire 1 % write_enable $end
+$var wire 1 & write_memory $end
+$var wire 1 ' zero $end
+$var wire 32 ( write_data [31:0] $end
+$var wire 32 ) signextend [31:0] $end
+$var wire 5 * shamt [4:0] $end
+$var wire 32 + rt_data [31:0] $end
+$var wire 5 , rt_a [4:0] $end
+$var wire 32 - rs_data [31:0] $end
+$var wire 5 . rs_a [4:0] $end
+$var wire 32 / read_data [31:0] $end
+$var wire 32 0 rd_data [31:0] $end
+$var wire 5 1 rd_a [4:0] $end
+$var wire 32 2 instruction [31:0] $end
+$var wire 6 3 funct [5:0] $end
+$var wire 32 4 aluout [31:0] $end
+$var wire 6 5 aluop [5:0] $end
+$var wire 32 6 PC [31:0] $end
+$var wire 32 7 Mem_address [31:0] $end
+$var wire 32 8 BTA [31:0] $end
+$var wire 32 9 B [31:0] $end
+$var wire 32 : A [31:0] $end
+$var reg 1 ; PC_init $end
+$var reg 2 < state [1:0] $end
+$scope module ALU $end
+$var wire 32 = a [31:0] $end
+$var wire 32 > b [31:0] $end
+$var wire 6 ? func_code [5:0] $end
+$var wire 5 @ shamt [4:0] $end
+$var wire 1 ' zero $end
+$var reg 32 A c [31:0] $end
+$upscope $end
+$scope module DM $end
+$var wire 32 B Instruction_Address [31:0] $end
+$var wire 1 $ Read_M $end
+$var wire 32 C W_Data [31:0] $end
+$var wire 1 & Write_M $end
+$var wire 1 # clk $end
+$var reg 32 D R_Data [31:0] $end
+$scope begin $ivl_for_loop2 $end
+$var integer 32 E k [31:0] $end
+$upscope $end
+$upscope $end
+$scope module IM $end
+$var wire 32 F Instruction_Address [31:0] $end
+$var reg 32 G Instruction [31:0] $end
+$scope begin $ivl_for_loop0 $end
+$var integer 32 H k [31:0] $end
+$upscope $end
+$upscope $end
+$scope module RF $end
+$var wire 1 # clk $end
+$var wire 5 I rd_address [4:0] $end
+$var wire 32 J rd_data [31:0] $end
+$var wire 5 K rs_address [4:0] $end
+$var wire 32 L rs_data [31:0] $end
+$var wire 5 M rt_address [4:0] $end
+$var wire 32 N rt_data [31:0] $end
+$var wire 1 % write_enable $end
+$scope begin $ivl_for_loop1 $end
+$var integer 32 O i [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope begin $ivl_for_loop3 $end
+$var integer 32 P i [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+bx P
+b100000 O
+bx N
+bx M
+bx L
+bx K
+bx J
+bx I
+b10000000 H
+bx G
+b11111111111111111111111111111100 F
+b1000000000 E
+bx D
+bx C
+bx B
+bx A
+bx @
+bx ?
+bx >
+bx =
+b0 <
+1;
+bx :
+bx 9
+bxzz 8
+bx 7
+b11111111111111111111111111111100 6
+bx 5
+bx 4
+bx 3
+bx 2
+bx 1
+bx 0
+bx /
+bx .
+bx -
+bx ,
+bx +
+bx *
+bx )
+bx (
+x'
+0&
+1%
+0$
+0#
+0"
+b10 !
+$end
+#1
+b100000 3
+b100000 ?
+b0 )
+b0 *
+b0 @
+b1010 1
+b1010 I
+b10 +
+b10 N
+b1001 ,
+b1001 M
+b1 -
+b1 L
+b1000 .
+b1000 K
+b0 5
+b1000010010101000000100000 2
+b1000010010101000000100000 G
+b0 6
+b0 F
+b0 /
+b0 D
+b1 <
+0;
+1#
+b0 P
+#2
+b1 P
+#3
+b10 P
+#4
+b11 P
+#5
+b100 P
+#6
+b101 P
+#7
+0#
+b0 !
+1$
+b110 P
+#8
+b1 !
+1"
+0$
+0%
+#9
