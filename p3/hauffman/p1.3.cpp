@@ -32,7 +32,7 @@ public:
     {
         head = NULL;
     }
-    void attach(node* &pnn)
+    void attach(node*& pnn)
     {
         if (head == NULL)
         {
@@ -57,7 +57,7 @@ public:
                 head = pnn;
             }
             else
-            { 
+            {
                 bk->next = pnn;
             }
 
@@ -73,31 +73,34 @@ public:
             {
                 cout << trav->c;
             }
-            cout<< ") ";
+            cout << ") ";
             trav = trav->next;
         }
     }
-    void merge()
+    node* merge()
     {
         node* ntree = new node();
         node* ltemp = head;
         node* rtemp = head->next;
+        head = head->next->next;
         ntree->f = ltemp->f + rtemp->f;
         ntree->l = ltemp;
         ntree->r = rtemp;
-        ntree->next = rtemp->next;
-        head = ntree;
+        ntree->next = NULL;
         ltemp->next = NULL;
         rtemp->next = NULL;
+        return ntree;
     }
 };
 
-void merge_full_list(slist &s)
+void merge_full_list(slist& s)
 {
     node* trav = s.head;
+    node* tmp = NULL;
     while (trav->next != NULL)
     {
-        s.merge();
+        node* tmp = s.merge();
+        s.attach(tmp);
         trav = s.head;
     }
 }
@@ -109,11 +112,11 @@ void code_tree(node* curr, int i, char* code)
     }
     char* tmpcode_l = new char[i];
     char* tmpcode_r = new char[i];
-        for (int j = 0; j < i - 2; j++)
-        {
-            tmpcode_l[j] = code[j];
-            tmpcode_r[j] = code[j];
-        }
+    for (int j = 0; j < i - 2; j++)
+    {
+        tmpcode_l[j] = code[j];
+        tmpcode_r[j] = code[j];
+    }
     tmpcode_r[i - 2] = '0';
     tmpcode_l[i - 2] = '1';
     tmpcode_r[i - 1] = '\0';
@@ -125,7 +128,7 @@ void code_tree(node* curr, int i, char* code)
         curr->code = code;
     }
 }
-void disp_tree(node* curr,int ct)
+void disp_tree(node* curr, int ct)
 {
     if (curr == NULL)
     {
@@ -138,9 +141,9 @@ void disp_tree(node* curr,int ct)
         cout << "(" << curr->f << ",";
         if (curr->c != NULL)
         {
-            cout << curr->c <<" "<< curr->code;
+            cout << curr->c << " " << curr->code;
         }
-        cout << ") ";
+        cout << ") " << endl;
     }
 }
 int main()
@@ -148,22 +151,34 @@ int main()
     slist s;
     node* n;
     int freq[255];
+    char c;
+    ifstream f;
+    string temp;
+    char* line = NULL;
+    int len;
+
     for (int i = 0; i < 255; i++)
     {
         freq[i] = 0;
     }
-    char c;
-    ifstream f;
-    string temp;
+
     f.open("test.txt");
     while (getline(f, temp))
     {
-       //is this okay?
-       for (int i = 0; temp[i] != '\0'; i++)
-       {
-           freq[temp[i]]++;
-       }
+        len = temp.length();
+        line = new char[len];
+        for (int i = 0; i < len; i++)
+        {
+            line[i] = temp[i];
+        }
+        //is this okay?
+        for (int i = 0; line[i] != '\0'; i++)
+        {
+            int j = line[i];
+            freq[j]++;
+        }
     }
+
     c = 0;
     for (int i = 0; i < 255; i++)
     {
@@ -177,6 +192,7 @@ int main()
             s.attach(n);
         }
     }
+
     s.disp();
     merge_full_list(s);
     cout << endl;
