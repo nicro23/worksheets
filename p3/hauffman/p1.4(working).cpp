@@ -121,8 +121,8 @@ void code_tree(node* curr, int i, char* code)
     tmpcode_l[i - 2] = '1';
     tmpcode_r[i - 1] = '\0';
     tmpcode_l[i - 1] = '\0';
-    code_tree(curr->r, i++, tmpcode_r);
-    code_tree(curr->l, i, tmpcode_l);
+    code_tree(curr->r, ++i, tmpcode_l);
+    code_tree(curr->l, i, tmpcode_r);
     if (curr->r == NULL)
     {
         curr->code = code;
@@ -174,6 +174,7 @@ int main()
         //is this okay?
         for (int i = 0; line[i] != '\0'; i++)
         {
+            //char to int
             int j = line[i];
             freq[j]++;
         }
@@ -192,8 +193,7 @@ int main()
             s.attach(n);
         }
     }
-    //f1.seekg()
-    //tellg
+
     s.disp();
     merge_full_list(s);
     cout << endl;
