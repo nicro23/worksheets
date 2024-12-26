@@ -14,19 +14,21 @@ module MIPS_datapath_tb;
         $dumpfile("datapath.vcd");
         $dumpvars(0, MIPS_datapath_tb);
         //rtype signals
-        write_enable = 1; write_memory = 0; read_memory = 0; branch = 0; aluop = 10; clk = 0; #1;
-        for(integer i = 0; i < 6; i++)begin
-        clk = 1; 
-        #1;
-        end
+        write_enable = 1; write_memory = 0; read_memory = 0; branch = 0; aluop = 10;
+        write_enable = 1; write_memory = 0; read_memory = 1; branch = 0; aluop = 00;
+        clk = 0; clk = 1; #1;
+        clk = 0; clk = 1; #1;
+        clk = 0; clk = 1; #1;
+        clk = 0; clk = 1; #1;
+        // clk = 0; #1;
+        // clk = 1; #1;
         //lw signals
-        write_enable = 1; write_memory = 0; read_memory = 1; branch = 0; aluop = 00; clk = 0; #1;
         // for(integer i = 0; i < 6; i++)begin
         // clk; 
         // #1;
         // end
         //beq signals
-        write_enable = 0; write_memory = 0; read_memory = 0; branch = 1; aluop = 01; clk = 0; #1;
+        // write_enable = 0; write_memory = 0; read_memory = 0; branch = 1; aluop = 01; clk = 0; #1;
         // for(integer i = 0; i < 6; i++)begin
         // clk++; 
         // #1;

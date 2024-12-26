@@ -13,21 +13,27 @@ module Instruction_Memory (
         end
         
         //examples
-        //lw (lw )
         //add (add $t2, $t0, $t1)
-        // 0000 00 01 000 0 1001 0 101 0 000 0010 0000 
+        // 000000 01000 01001 01010 00000 100000 
         mem[0] = 8'h01;
         mem[1] = 8'h09;
         mem[2] = 8'h50;
         mem[3] = 8'h20;
-        
-        //lw 
-        // 100011 01011 01101 0000 0000 0000 0000
-        mem[4] = 8'h8D;
-        mem[5] = 8'h6D;
-        mem[6] = 8'h00;
-        mem[7] = 8'h00;
 
+        //sub (sub $t2, $t0, $t1)
+        // 000000 01000 01001 01011 00000 100010 
+        mem[4] = 8'h01;
+        mem[5] = 8'h09;
+        mem[6] = 8'h58;
+        mem[7] = 8'h22;
+        
+        //lw (lw $t1 , 0[$t2])
+        // 100011 01011 01101 0000 0000 0000 0000
+        mem[0] = 8'h8D;
+        mem[1] = 8'h6D;
+        mem[2] = 8'h00;
+        mem[3] = 8'h00;
+        
         //beq 
         // 0001 00 01 010 0 1011 0000 0000 0000 0100
         mem[8] = 8'h11;  // (opcode )
@@ -63,8 +69,9 @@ module RegisterFile (
         for(integer i = 0; i < 32; i++) begin
                 registers[i] = 0;
             end
-        registers[8] = 32'd1;
-        registers[9] = 32'd2;
+        registers[8] = 32'd2;
+        registers[9] = 32'd1;
+        registers[11] = 32'd4;
     end
     assign rs_data = registers[rs_address];
     assign rt_data = registers[rt_address];
@@ -107,7 +114,7 @@ module DataMemory (
         // Clear memory
         for (integer k = 0; k < 512; k = k + 1) 
             mem[k] = 0;   
-        mem[13] = 32'd4;
+        mem[0] = 32'd4;
     end
     // Read/Write Logic
     always @(posedge clk) begin
@@ -137,7 +144,7 @@ wire [31:0] rs_data, rt_data, rd_data, Mem_address, write_data, read_data;
 wire [31:0] A, B;
 wire [31:0] aluout;
 wire [5:0] aluop, funct;
-reg [1:0] state;
+reg [2:0] state;
 reg PC_init;
 wire zero;
 initial begin
@@ -189,37 +196,16 @@ end
 //execute instruction
 2:
 begin
-        //beq
-        //should create a new instance instead
-        // BTA = pc + signextend << 2;
-        // alu(address, 2, shiftfunct, ??,BTA,zero)
     // state = (aluop == 6'd4 && zero) ? 1 : 3;
     state = 3;
 end
 //memory write/read
 3:
 begin
-    // case(aluop)
-    //     //lw
-    //     6'd35:
-    //     begin
-    //     end
-    //     //sw
-    //     6'd43:
-    //     begin
-    //     end
-    //     //beq
-    //     6'd4:
-    //     begin
-    //     if(zero)begin
-    //         PC = BTA;
-    //         state = 1;
-    //     end
-    //     end
-    //     6'd0:
-    //     begin
-    //     end
-    // endcase
+    state = 4;
+end
+4:
+begin
     state = 0;
 end
 endcase
