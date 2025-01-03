@@ -100,7 +100,7 @@ public:
         while (trav != NULL)
         {
             cout << "(" << trav->c << ",";
-            cout << trav->code;
+            cout << trav->f;
             cout << ") ";
             trav = trav->next;
         }
@@ -154,8 +154,9 @@ void code_tree(node* curr, int i, char* code)
     if (curr->r == NULL)
     {
         curr->code = code;
-        curr->len_code = i - 3;
-        if((i - 3) > 255)
+        curr->len_code = i - 2;
+        //max capacity of len code is 255
+        if((i - 2) > 255)
         {
             curr->code = new char[9];
             curr->code[0] = 'c';curr->code[1] = 'o';curr->code[2] = 'd';curr->code[3] = 'e';
@@ -188,7 +189,7 @@ void tree_to_list(node* curr,node* bk, slist& l)
     }
     tree_to_list(curr->r, curr, l);
     tree_to_list(curr->l, curr, l);
-    if(curr->r == NULL)
+    if(curr->r == NULL && curr->code != NULL)
     {
         if(bk->r == curr)
         {
@@ -220,152 +221,129 @@ node* find_letter(char c, slist& l)
     }
     return trav;
 }
-
-node* find_code(char cmp[],int len, slist& l)
-{
-    node* trav = l.head;
-    int f;
-    while(trav != NULL)
-    {
-        if(len == trav->len_code)
-        {
-            f = 1;
-            for(int i = 0; cmp[i] != '\0'; i++)
-            {
-                if( cmp[i] != trav->code[i])
-                {
-                    f = 0;
-                }
-            }
-            if(f == 1)
-            {
-//                cout << cmp << "|||" << trav->code <<" "<< trav->c<< endl;
-                break;
-            }
-        }
-        trav = trav->next;
-    }
-    return trav;
-}
-
 int main()
 {
     //declare & initialize var
-    slist l;
+    slist s, l;
     node* n;
-    //max len_code is 255
-    char cmp[255];
     char c, code, mask;
     ifstream f;
     ofstream o;
-    int len, bits_written, len_code, num_node;
+    int len, bits_written;
+    
+    //open file
+    f.open("in.txt", ifstream::binary);
+    if(!(f.is_open()))
+    {
+        cout<<"file not open";
+    }
 
-    //read code list
-    f.open("meta.txt", ifstream::binary);
+    //read file for freq
     f.seekg(0, f.end);
     len = f.tellg();
     f.seekg(0, f.beg);
-
-    for(int i = 0; i < len;)
+    for(int i = 0; i < len; i++)
     {
         f.read(&c, 1);
-        i++;
-        n = new node();
-        n->c = c;
-        f.read(&c, 1);
-        i++;
-        n->len_code = c;
-        len_code = c;
-        n->code = new char[len_code];
-        f.read(&c, 1);
-        i++;
-        bits_written = 0;
-        for(int j = 0; j < len_code - 1; j++)
+        n = find_letter(c, s);
+        if(n == NULL)
         {
-            mask = 1;
-            mask = mask << (7 - bits_written);
-            code = c & mask;
-            bits_written++;
-            if(code == 0)
-            {
-                n->code[j] = '0';
-            }
-            else
-            {
-                n->code[j] = '1';
-            }
-            n->code[j + 1] = '\0';
-            if(bits_written == 8)
-            {
-                f.read(&c, 1);
-                i++;
-                bits_written = 0;
-            }
-        }
-        l.rev_insert(n);
-    }
-    l.disp();
-    nxt();
-
-    f.close();
-    f.open("compressed.bin", ifstream::binary);
-    o.open("out.bin", ofstream::binary);
-    f.seekg(0, f.end);
-    len = f.tellg();
-    f.seekg(0, f.beg);
-    bits_written = 0;
-    for(int i = 0; i < len - 2; i++)
-    {
-        f.read(&c, 1);
-        for(int j = 0; j < 8; j++)
-        {
-            mask = 1;
-            mask = mask << (7 - j);
-            code = c & mask;
-            if(code == 0)
-            {
-                cmp[bits_written++] = '0';
-            }
-            else
-            {
-                cmp[bits_written++] = '1';
-            }
-            cmp[bits_written + 1] = '\0';
-            n = find_code(cmp, bits_written + 1, l);
-            if(n != NULL)
-            {
-                code = n->c;
-                o.write(&code, 1);
-                bits_written = 0;
-            }
-        }
-    }
-    //read last byte
-    f.read(&c, 1);
-    len = c;
-    f.read(&c, 1);
-    for(int j = 0; j < len; j++)
-    {
-        mask = 1;
-        mask = mask << (7 - j);
-        code = c & mask;
-        if(code == 0)
-        {
-            cmp[bits_written++] = '0';
+            n = new node();
+            n->c = c++;
+            n->f = 1;
+            s.insert(n);
         }
         else
         {
-            cmp[bits_written++] = '1';
+            n->f++;
         }
-        cmp[bits_written + 1] = '\0';
-        n = find_code(cmp, bits_written + 1, l);
-        if(n != NULL)
+    }
+
+    //get hauffman code
+    s.disp();
+    merge_full_list(s);
+    nxt();
+    s.disp();
+    nxt();
+    code_tree(s.head, 2, NULL);
+    disp_tree(s.head, 0);
+    nxt();
+    tree_to_list(s.head, s.head, l);
+    l.disp();
+    nxt();
+
+    //re-read file to encode text
+    f.seekg(0, f.beg);
+    o.open("compressed.bin", ofstream::binary);
+    bits_written = 0;
+    code = 0;
+    for(int i = 0; i < len; i++)
+    {
+        f.read(&c, 1);
+        n = find_letter(c, l);
+        for(int j = 0;n->code[j] != '\0'; j++)
         {
-            code = n->c;
-            o.write(&code, 1);
-            bits_written = 0;
+            if(n->code[j] == '1')
+            {
+                mask = 1;
+                mask = mask << (7 - bits_written);
+                code = (code | mask);
+            }
+            bits_written++;
+            if(bits_written == 8)
+            {
+                o.write(&code, 1);
+                cout<<code;
+                code = 0;
+                bits_written = 0;
+            }
         }
+    }
+    //last byte
+    c = bits_written;
+    o.write(&c, 1);
+    o.write(&code, 1);
+    code = 0;
+    nxt();
+
+    //write list to a file
+    o.close();
+    o.open("meta.txt", ofstream::binary);
+
+    n = l.head;
+    while( n != NULL)
+    {
+        c = n->c;
+        o.write(&c, 1);
+        c = n->len_code;
+        o.write(&c, 1);
+        len = n->len_code;
+        bits_written = 0;
+        for(int i = 0;n->code[i] != '\0'; i++)
+        {
+            if(n->code[i] == '1')
+            {
+                mask = 1;
+                mask = mask << (7 - bits_written);
+                code = (code | mask);
+            }
+            bits_written++;
+            if(bits_written == 8)
+            {
+                o.write(&code, 1);
+                cout<<code;
+                code = 0;
+                bits_written = 0;
+            }
+        }
+        if(bits_written != 0)
+        {
+            o.write(&code, 1);
+            code = 0;
+        }
+        n = n->next;
     }
     nxt();
 }
 
+//undo batats

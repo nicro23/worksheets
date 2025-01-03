@@ -258,7 +258,7 @@ int main()
     char c, code, mask;
     ifstream f;
     ofstream o;
-    int len, bits_written, len_code, num_node;
+    int len, bits_written, len_code;
 
     //read code list
     f.open("meta.txt", ifstream::binary);

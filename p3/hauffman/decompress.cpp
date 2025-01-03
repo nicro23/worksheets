@@ -258,29 +258,31 @@ int main()
     char c, code, mask;
     ifstream f;
     ofstream o;
-    int len, bits_written, len_code, num_node;
+    int len, bits_written, len_code;
 
     //read code list
     f.open("meta.txt", ifstream::binary);
     f.seekg(0, f.end);
     len = f.tellg();
+    cout<<len;
     f.seekg(0, f.beg);
-
-    for(int i = 0; i < len;)
+    for(int i = 0; i < len; i++)
     {
         f.read(&c, 1);
-        i++;
         n = new node();
         n->c = c;
         f.read(&c, 1);
-        i++;
         n->len_code = c;
         len_code = c;
+        //idk
+        if(len_code == 0)
+        {
+            break;
+        }
         n->code = new char[len_code];
         f.read(&c, 1);
-        i++;
         bits_written = 0;
-        for(int j = 0; j < len_code - 1; j++)
+        for(int i = 0; i < len_code - 1; i++)
         {
             mask = 1;
             mask = mask << (7 - bits_written);
@@ -288,17 +290,16 @@ int main()
             bits_written++;
             if(code == 0)
             {
-                n->code[j] = '0';
+                n->code[i] = '0';
             }
             else
             {
-                n->code[j] = '1';
+                n->code[i] = '1';
             }
-            n->code[j + 1] = '\0';
+            n->code[i + 1] = '\0';
             if(bits_written == 8)
             {
                 f.read(&c, 1);
-                i++;
                 bits_written = 0;
             }
         }

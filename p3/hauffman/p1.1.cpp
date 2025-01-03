@@ -1,14 +1,14 @@
 #include<iostream>
-#include<stdio.h>
 #include<fstream>
-#include<string>
 using namespace std;
 
 class node {
 public:
     int f;
     char* code;
-    char* c;
+    char c;
+    //max len of code is 255 take care
+    unsigned char len_code;
     node* next;
     node* l;
     node* r;
@@ -16,7 +16,6 @@ public:
     {
         f = 0;
         code = NULL;
-        c = NULL;
         next = NULL;
         l = NULL;
         r = NULL;
@@ -32,7 +31,7 @@ public:
     {
         head = NULL;
     }
-    void attach(node*& pnn)
+    void insert(node*& pnn)
     {
         if (head == NULL)
         {
@@ -63,41 +62,73 @@ public:
 
         }
     }
+
+    void rev_insert(node*& pnn)
+    {
+        if (head == NULL)
+        {
+            head = pnn;
+        }
+        else
+        {
+            node* trav = head;
+            node* bk = NULL;
+            while (trav != NULL)
+            {
+                if (pnn->f > trav->f)
+                {
+                    break;
+                }
+                bk = trav;
+                trav = trav->next;
+            }
+            pnn->next = trav;
+            if (bk == NULL)
+            {
+                head = pnn;
+            }
+            else
+            {
+                bk->next = pnn;
+            }
+
+        }
+    }
     void disp()
     {
         node* trav = head;
         while (trav != NULL)
         {
-            cout << "(" << trav->f << ",";
-            if (trav->c != NULL)
-            {
-                cout << trav->c;
-            }
+            cout << "(" << trav->c << ",";
+            cout << trav->f;
             cout << ") ";
             trav = trav->next;
         }
     }
-    void merge()
+    node* merge()
     {
         node* ntree = new node();
         node* ltemp = head;
         node* rtemp = head->next;
+        head = head->next->next;
         ntree->f = ltemp->f + rtemp->f;
         ntree->l = ltemp;
         ntree->r = rtemp;
-        ntree->next = rtemp->next;
-        head = ntree;
+        ntree->next = NULL;
         ltemp->next = NULL;
         rtemp->next = NULL;
+        return ntree;
     }
 };
 
 void merge_full_list(slist& s)
 {
     node* trav = s.head;
+    node* tmp = NULL;
     while (trav->next != NULL)
     {
-        s.merge();
+        tmp = s.merge();
+        s.insert(tmp);
         trav = s.head;
     }
 }
@@ -118,11 +149,20 @@ void code_tree(node* curr, int i, char* code)
     tmpcode_l[i - 2] = '1';
     tmpcode_r[i - 1] = '\0';
     tmpcode_l[i - 1] = '\0';
-    code_tree(curr->r, i++, tmpcode_r);
-    code_tree(curr->l, i, tmpcode_l);
+    code_tree(curr->r, ++i, tmpcode_l);
+    code_tree(curr->l, i, tmpcode_r);
     if (curr->r == NULL)
     {
         curr->code = code;
+        curr->len_code = i - 2;
+        //max capacity of len code is 255
+        if((i - 2) > 255)
+        {
+            curr->code = new char[9];
+            curr->code[0] = 'c';curr->code[1] = 'o';curr->code[2] = 'd';curr->code[3] = 'e';
+            curr->code[4] = 'l';curr->code[5] = 'o';curr->code[6] = 'n';curr->code[7] = 'g';
+            curr->code[8] = '\0';
+        }
     }
 }
 void disp_tree(node* curr, int ct)
@@ -135,66 +175,202 @@ void disp_tree(node* curr, int ct)
     disp_tree(curr->l, ct);
     if (curr->r == NULL)
     {
-        cout << "(" << curr->f << ",";
-        if (curr->c != NULL)
-        {
-            cout << curr->c << " " << curr->code;
-        }
+        cout << "(" << curr->c << ",";
+        cout << curr->f << " " << curr->code;
         cout << ") " << endl;
     }
 }
+
+void tree_to_list(node* curr,node* bk, slist& l)
+{
+    if(curr == NULL)
+    {
+        return;
+    }
+    tree_to_list(curr->r, curr, l);
+    tree_to_list(curr->l, curr, l);
+    if(curr->r == NULL && curr->code != NULL)
+    {
+        if(bk->r == curr)
+        {
+            bk->r = NULL;
+        }
+        else
+        {
+            bk->l = NULL;
+        }
+        l.rev_insert(curr);
+    }
+}
+
+void nxt()
+{
+    cout<< endl<< "step completed"<< endl;
+}
+
+node* find_letter(char c, slist& l)
+{
+    node* trav = l.head;
+    while(trav != NULL)
+    {
+        if(trav->c == c)
+        {
+            break;
+        }
+        trav = trav->next;
+    }
+    return trav;
+}
 int main()
 {
-    slist s;
+    //declare & initialize var
+    slist s, l;
     node* n;
     int freq[255];
-    char c;
+    char c, code, mask;
     ifstream f;
-    string temp;
-    char* line = NULL;
-    int len;
+    ofstream o;
+    int len, bits_written;
 
     for (int i = 0; i < 255; i++)
     {
         freq[i] = 0;
     }
 
-    f.open("test.txt");
-    while (getline(f, temp))
+    //open file
+    f.open("in.txt", ifstream::binary);
+    if(!(f.is_open()))
     {
-        len = temp.length();
-        line = new char[len];
-        for (int i = 0; i < len; i++)
+        cout<<"file not open";
+    }
+
+    //read file for freq
+    f.seekg(0, f.end);
+    len = f.tellg();
+    f.seekg(0, f.beg);
+    for(int i = 0; i < len; i++)
+    {
+        f.read(&c, 1);
+        n = find_letter(c, s);
+        if(n == NULL)
         {
-            line[i] = temp[i];
+            n = new node();
+            n->c = c++;
+            n->f = 1;
+            s.insert(n);
         }
-        //is this okay?
-        for (int i = 0; line[i] != '\0'; i++)
+        else
         {
-            int j = line[i];
-            freq[j]++;
+            n->f++;
         }
     }
 
-    c = 0;
-    for (int i = 0; i < 255; i++)
-    {
-        n = new node();
-        n->c = new char[2];
-        n->c[0] = c++;
-        n->c[1] = '\0';
-        n->f = freq[i];
-        if (n->f)
-        {
-            s.attach(n);
-        }
-    }
+    //write freq to nodes & insert to list
+//    c = 0;
+//    for (int i = 0; i < 255; i++)
+//    {
+//        n = new node();
+//        n->c = c++;
+//        n->f = freq[i];
+//        if (n->f)
+//        {
+//            s.insert(n);
+//        }
+//    }
 
+    //get hauffman code
     s.disp();
     merge_full_list(s);
-    cout << endl;
+    nxt();
     s.disp();
-    cout << endl;
+    nxt();
     code_tree(s.head, 2, NULL);
     disp_tree(s.head, 0);
+    nxt();
+    tree_to_list(s.head, s.head, l);
+    l.disp();
+    nxt();
+
+    //re-read file to encode text
+    f.seekg(0, f.beg);
+    o.open("compressed.bin", ofstream::binary);
+    bits_written = 0;
+    code = 0;
+    for(int i = 0; i < len; i++)
+    {
+        f.read(&c, 1);
+        n = find_letter(c, l);
+        for(int j = 0;n->code[j] != '\0'; j++)
+        {
+            if(n->code[j] == '1')
+            {
+                mask = 1;
+                mask = mask << (7 - bits_written);
+                code = (code | mask);
+            }
+            bits_written++;
+            if(bits_written == 8)
+            {
+                o.write(&code, 1);
+                cout<<code;
+                code = 0;
+                bits_written = 0;
+            }
+        }
+    }
+    //last byte
+    c = bits_written;
+    o.write(&c, 1);
+    o.write(&code, 1);
+    code = 0;
+    nxt();
+
+    //write list to a file
+    o.close();
+    o.open("meta.txt", ofstream::binary);
+    int ct =0;
+//    n = l.head;
+//    while( n != NULL)
+//    {
+//        ct++;
+//        n = n->next;
+//    }
+//    c = ct;
+//    o.write(&c, 1);
+    n = l.head;
+    while( n != NULL)
+    {
+        c = n->c;
+        o.write(&c, 1);
+        c = n->len_code;
+        o.write(&c, 1);
+        len = n->len_code;
+        bits_written = 0;
+        for(int i = 0;n->code[i] != '\0'; i++)
+        {
+            if(n->code[i] == '1')
+            {
+                mask = 1;
+                mask = mask << (7 - bits_written);
+                code = (code | mask);
+            }
+            bits_written++;
+            if(bits_written == 8)
+            {
+                o.write(&code, 1);
+                cout<<code;
+                code = 0;
+                bits_written = 0;
+            }
+        }
+        if(bits_written != 0)
+        {
+            o.write(&code, 1);
+            code = 0;
+        }
+        n = n->next;
+    }
+    nxt();
 }
+
+//undo batats
