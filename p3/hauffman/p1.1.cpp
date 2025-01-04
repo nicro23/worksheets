@@ -100,7 +100,7 @@ public:
         while (trav != NULL)
         {
             cout << "(" << trav->c << ",";
-            cout << trav->f;
+            cout << trav->f<< ","<< int(trav->len_code);
             cout << ") ";
             trav = trav->next;
         }
@@ -226,16 +226,10 @@ int main()
     //declare & initialize var
     slist s, l;
     node* n;
-    int freq[255];
     char c, code, mask;
     ifstream f;
     ofstream o;
     int len, bits_written;
-
-    for (int i = 0; i < 255; i++)
-    {
-        freq[i] = 0;
-    }
 
     //open file
     f.open("in.txt", ifstream::binary);
@@ -264,19 +258,6 @@ int main()
             n->f++;
         }
     }
-
-    //write freq to nodes & insert to list
-//    c = 0;
-//    for (int i = 0; i < 255; i++)
-//    {
-//        n = new node();
-//        n->c = c++;
-//        n->f = freq[i];
-//        if (n->f)
-//        {
-//            s.insert(n);
-//        }
-//    }
 
     //get hauffman code
     s.disp();
@@ -328,15 +309,7 @@ int main()
     //write list to a file
     o.close();
     o.open("meta.txt", ofstream::binary);
-    int ct =0;
-//    n = l.head;
-//    while( n != NULL)
-//    {
-//        ct++;
-//        n = n->next;
-//    }
-//    c = ct;
-//    o.write(&c, 1);
+
     n = l.head;
     while( n != NULL)
     {

@@ -100,7 +100,7 @@ public:
         while (trav != NULL)
         {
             cout << "(" << trav->c << ",";
-            cout << trav->code;
+            cout << trav->code<< ","<< int(trav->len_code);
             cout << ") ";
             trav = trav->next;
         }
@@ -154,8 +154,9 @@ void code_tree(node* curr, int i, char* code)
     if (curr->r == NULL)
     {
         curr->code = code;
-        curr->len_code = i - 3;
-        if((i - 3) > 255)
+        curr->len_code = i - 2;
+        //max capacity of len code is 255
+        if((i - 2) > 255)
         {
             curr->code = new char[9];
             curr->code[0] = 'c';curr->code[1] = 'o';curr->code[2] = 'd';curr->code[3] = 'e';
@@ -202,11 +203,6 @@ void tree_to_list(node* curr,node* bk, slist& l)
     }
 }
 
-void nxt()
-{
-    cout<< endl<< "step completed"<< endl;
-}
-
 node* find_letter(char c, slist& l)
 {
     node* trav = l.head;
@@ -239,13 +235,17 @@ node* find_code(char cmp[],int len, slist& l)
             }
             if(f == 1)
             {
-//                cout << cmp << "|||" << trav->code <<" "<< trav->c<< endl;
                 break;
             }
         }
         trav = trav->next;
     }
     return trav;
+}
+
+void nxt()
+{
+    cout<< endl<< "step completed"<< endl;
 }
 
 int main()
@@ -273,7 +273,6 @@ int main()
         n = new node();
         n->c = c;
         f.read(&c, 1);
-        cout<<int(c)<<endl;
         i++;
         n->len_code = c;
         len_code = c;
