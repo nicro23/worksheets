@@ -329,7 +329,9 @@ int main()
     //last byte
     c = bits_written;
     o.write(&c, 1);
+    cout<<c;
     o.write(&code, 1);
+    cout<<code;
     code = 0;
     nxt();
 
@@ -365,6 +367,7 @@ int main()
         }
         if(bits_written != 0)
         {
+            cout<<code;
             o.write(&code, 1);
             code = 0;
         }

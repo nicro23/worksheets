@@ -336,6 +336,7 @@ int main()
             if(n != NULL)
             {
                 code = n->c;
+                cout<<code;
                 o.write(&code, 1);
                 bits_written = 0;
             }
@@ -363,6 +364,7 @@ int main()
         if(n != NULL)
         {
             code = n->c;
+            cout<<code;
             o.write(&code, 1);
             bits_written = 0;
         }
